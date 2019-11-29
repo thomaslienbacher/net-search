@@ -1,7 +1,6 @@
 package swp.netsearch.restapi;
 
 import org.restlet.Component;
-import org.restlet.Server;
 import org.restlet.data.Protocol;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
