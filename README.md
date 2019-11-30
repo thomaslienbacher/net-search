@@ -13,3 +13,4 @@ Anforderungen:
 
 * PHP 7.4
 * OpenJDK 13
+* MariaDB 10.4 (MySQL 5.0)
