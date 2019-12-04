@@ -12,8 +12,8 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
  * @author Thomas Lienbacher
  */
 public class Database {
-    private SessionFactory sessionFactory;
     public Session session;
+    private SessionFactory sessionFactory;
 
     public Database() {
         final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()

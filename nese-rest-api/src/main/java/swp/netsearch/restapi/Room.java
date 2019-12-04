@@ -11,20 +11,19 @@ import javax.persistence.*;
 @Entity
 @Table(name = "rooms")
 public class Room {
-    int id_rooms;
+    int id_room;
     String name;
 
     public Room() {}
 
     @Id
-    @Column(name = "id_rooms")//TODO: rename to id_room
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int getId_rooms() {
-        return id_rooms;
+    public int getId_room() {
+        return id_room;
     }
 
-    public void setId_rooms(int id_rooms) {
-        this.id_rooms = id_rooms;
+    public void setId_room(int id_room) {
+        this.id_room = id_room;
     }
 
     public String getName() {
@@ -38,7 +37,7 @@ public class Room {
     @Override
     public String toString() {
         return "Room{" +
-                "id_rooms=" + id_rooms +
+                "id_room=" + id_room +
                 ", name='" + name + '\'' +
                 '}';
     }

@@ -1,2 +1,4 @@
 # Default ignored files
 /workspace.xml
+/$CACHE_FILE$
+inspectionProfiles

@@ -11,41 +11,38 @@ import javax.persistence.*;
 @Entity
 @Table(name = "port_connections")
 public class AssignedConnection {
-    int id_port_connections;
-    int _switch; //TODO: rename because reserved keyword
-    int room;
+    int id_port_connection;
+    int switch_id;
+    int room_id;
     int port;
 
     public AssignedConnection() {
     }
 
     @Id
-    @Column(name = "id_port_connections")//TODO: rename to id_port_connection
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int getId_port_connections() {
-        return id_port_connections;
+    public int getId_port_connection() {
+        return id_port_connection;
     }
 
-    public void setId_port_connections(int id_port_connections) {
-        this.id_port_connections = id_port_connections;
+    public void setId_port_connection(int id_port_connection) {
+        this.id_port_connection = id_port_connection;
     }
 
-    @Column(name = "switch")
-    public int get_switch() {
-        return _switch;
+    public int getSwitch_id() {
+        return switch_id;
     }
 
-    @Column(name = "switch")
-    public void set_switch(int _switch) {
-        this._switch = _switch;
+    public void setSwitch_id(int switch_id) {
+        this.switch_id = switch_id;
     }
 
-    public int getRoom() {
-        return room;
+    public int getRoom_id() {
+        return room_id;
     }
 
-    public void setRoom(int room) {
-        this.room = room;
+    public void setRoom_id(int room) {
+        this.room_id = room;
     }
 
     public int getPort() {
@@ -59,9 +56,9 @@ public class AssignedConnection {
     @Override
     public String toString() {
         return "AssignedConnection{" +
-                "id_port_connections=" + id_port_connections +
-                ", _switch=" + _switch +
-                ", room=" + room +
+                "id_port_connection=" + id_port_connection +
+                ", switch_id=" + switch_id +
+                ", room_id=" + room_id +
                 ", port=" + port +
                 '}';
     }

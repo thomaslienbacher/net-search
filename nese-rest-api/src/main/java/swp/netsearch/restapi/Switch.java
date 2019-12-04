@@ -1,7 +1,5 @@
 package swp.netsearch.restapi;
 
-import jdk.jfr.Unsigned;
-
 import javax.persistence.*;
 
 /**
@@ -13,7 +11,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "switches")
 public class Switch {
-    int id_switches;
+    int id_switch;
     String name;
     int ip;//TODO: use long or best unsigned int
 
@@ -21,14 +19,13 @@ public class Switch {
     }
 
     @Id
-    @Column(name = "id_switches")//TODO: rename to id_switch
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int getId_switches() {
-        return id_switches;
+    public int getId_switch() {
+        return id_switch;
     }
 
-    public void setId_switches(int id_switches) {
-        this.id_switches = id_switches;
+    public void setId_switch(int id_switch) {
+        this.id_switch = id_switch;
     }
 
     public String getName() {
@@ -39,7 +36,7 @@ public class Switch {
         this.name = name;
     }
 
-    public long getIp() {
+    public int getIp() {
         return ip;
     }
 
@@ -50,7 +47,7 @@ public class Switch {
     @Override
     public String toString() {
         return "Switch{" +
-                "id_switches=" + id_switches +
+                "id_switch=" + id_switch +
                 ", name='" + name + '\'' +
                 ", ip=" + ip +
                 '}';

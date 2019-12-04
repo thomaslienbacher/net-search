@@ -24,7 +24,7 @@ public class Main extends ServerResource {
     @Get
     public static String dbtest() {
         var db = new Database();
-        var devices = db.session.createQuery("SELECT T FROM Switch T", Switch.class).getResultList();
+        var devices = db.session.createQuery("SELECT T FROM AssignedConnection T", AssignedConnection.class).getResultList();
         db.close();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return gson.toJson(devices);
