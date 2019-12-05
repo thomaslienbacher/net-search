@@ -1,4 +1,4 @@
-package swp.netsearch.restapi;
+package swp.netsearch.restapi.models;
 
 import javax.persistence.*;
 
@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class Switch {
     int id_switch;
     String name;
-    int ip;//TODO: use long or best unsigned int
+    long ip;//int isn't big enough because of the sign
 
     public Switch() {
     }
@@ -36,11 +36,11 @@ public class Switch {
         this.name = name;
     }
 
-    public int getIp() {
+    public long getIp() {
         return ip;
     }
 
-    public void setIp(int ip) {
+    public void setIp(long ip) {
         this.ip = ip;
     }
 

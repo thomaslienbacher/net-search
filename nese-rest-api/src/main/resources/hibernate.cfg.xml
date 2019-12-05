@@ -11,10 +11,10 @@
         <!--<property name="connection.password"></property>--><!-- no password -->
         <property name="show_sql">true</property>
 
-        <mapping class="swp.netsearch.restapi.Device"/>
-        <mapping class="swp.netsearch.restapi.Switch"/>
-        <mapping class="swp.netsearch.restapi.Room"/>
-        <mapping class="swp.netsearch.restapi.AssignedConnection"/>
+        <mapping class="swp.netsearch.restapi.models.Device"/>
+        <mapping class="swp.netsearch.restapi.models.Switch"/>
+        <mapping class="swp.netsearch.restapi.models.Room"/>
+        <mapping class="swp.netsearch.restapi.models.AssignedConnection"/>
 
     </session-factory>
 </hibernate-configuration>

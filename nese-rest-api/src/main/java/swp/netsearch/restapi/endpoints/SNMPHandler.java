@@ -1,7 +1,7 @@
-package swp.netsearch.restapi;
+package swp.netsearch.restapi.endpoints;
 
-import org.restlet.resource.Get;
-import org.restlet.resource.ServerResource;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.snmp4j.CommunityTarget;
 import org.snmp4j.Snmp;
 import org.snmp4j.Target;
@@ -14,6 +14,7 @@ import org.snmp4j.util.TreeEvent;
 import org.snmp4j.util.TreeUtils;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -23,12 +24,19 @@ import java.util.TreeMap;
  *
  * @author Thomas Lienbacher
  */
-public class SNMPHandler extends ServerResource {
-    @Get
-    public static String snmp() {
+public class SNMPHandler extends Endpoint {
+
+    /*
+     * This may only work on CISCO SF 300-24 24-Port 10/100 Managed Switch
+     * TODO: ? Solution: store in database
+     */
+    static final String OID_PORTS = ".1.3.6.1.2.1.17.4.3.1.2";
+
+    @Override
+    public String accept() {
         CommunityTarget target = new CommunityTarget();
-        target.setCommunity(new OctetString("public"));
-        target.setAddress(GenericAddress.parse("udp:192.168.0.13/161"));
+        target.setCommunity(new OctetString("public"));//TODO: store in database
+        target.setAddress(GenericAddress.parse("udp:192.168.1.254/161"));
         target.setRetries(2);
         target.setTimeout(1500);
         target.setVersion(SnmpConstants.version2c);
@@ -36,24 +44,38 @@ public class SNMPHandler extends ServerResource {
         Map<String, String> result;
 
         try {
-            result = doWalk(".1.3.6.1.2.1.2.2.1", target);
+            result = doWalk(OID_PORTS, target);
         } catch (Exception e) {
             return e.getMessage();
         }
-        StringBuilder builder = new StringBuilder(2000);
+
+        HashMap<String, Integer> connectedDevices = new HashMap<>();
 
         for (Map.Entry<String, String> entry : result.entrySet()) {
-            builder.append(entry.getKey());
-            builder.append("\t:\t'");
-            builder.append(entry.getValue());
-            builder.append("'\n");
+            String mac = dotNotationToMAC(
+                    entry.getKey().substring(OID_PORTS.length() + 1));
+            int port = Integer.parseInt(entry.getValue());
+            connectedDevices.put(mac, port);
         }
 
-
-        return builder.toString();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        return gson.toJson(connectedDevices);
     }
 
-    static Map<String, String> doWalk(String tableOid, Target target) throws IOException {
+    //TODO: write tests
+    private String dotNotationToMAC(String dotNotation) {
+        var parts = dotNotation.split("\\.");
+        StringBuilder mac = new StringBuilder();
+
+        for (int i = 0; i < parts.length; i++) {
+            mac.append(String.format("%02X", Integer.parseInt(parts[i])));
+            if (i < parts.length - 1) mac.append(":");
+        }
+
+        return mac.toString();
+    }
+
+    private Map<String, String> doWalk(String tableOid, Target target) throws IOException {
         Map<String, String> result = new TreeMap<>();
         TransportMapping<? extends Address> transport = new DefaultUdpTransportMapping();
         Snmp snmp = new Snmp(transport);
@@ -62,7 +84,7 @@ public class SNMPHandler extends ServerResource {
         TreeUtils treeUtils = new TreeUtils(snmp, new DefaultPDUFactory());
         List<TreeEvent> events = treeUtils.getSubtree(target, new OID(tableOid));
         if (events == null || events.size() == 0) {
-            System.out.println("Error: Unable to read table...");
+            System.err.println("Error: Unable to read table...");
             return result;
         }
 
@@ -71,7 +93,7 @@ public class SNMPHandler extends ServerResource {
                 continue;
             }
             if (event.isError()) {
-                System.out.println("Error: table OID [" + tableOid + "] " + event.getErrorMessage());
+                System.err.println("Error: table OID [" + tableOid + "] " + event.getErrorMessage());
                 continue;
             }
 

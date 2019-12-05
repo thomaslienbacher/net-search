@@ -1,4 +1,4 @@
-package swp.netsearch.restapi;
+package swp.netsearch.restapi.models;
 
 import javax.persistence.*;
 
