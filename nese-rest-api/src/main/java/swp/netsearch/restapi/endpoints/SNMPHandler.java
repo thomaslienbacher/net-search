@@ -1,7 +1,5 @@
 package swp.netsearch.restapi.endpoints;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.snmp4j.CommunityTarget;
 import org.snmp4j.Snmp;
 import org.snmp4j.Target;
@@ -12,9 +10,11 @@ import org.snmp4j.transport.DefaultUdpTransportMapping;
 import org.snmp4j.util.DefaultPDUFactory;
 import org.snmp4j.util.TreeEvent;
 import org.snmp4j.util.TreeUtils;
+import swp.netsearch.restapi.models.Switch;
+import swp.netsearch.restapi.util.Pair;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -24,7 +24,7 @@ import java.util.TreeMap;
  *
  * @author Thomas Lienbacher
  */
-public class SNMPHandler extends Endpoint {
+public class SNMPHandler {
 
     /*
      * This may only work on CISCO SF 300-24 24-Port 10/100 Managed Switch
@@ -32,34 +32,52 @@ public class SNMPHandler extends Endpoint {
      */
     static final String OID_PORTS = ".1.3.6.1.2.1.17.4.3.1.2";
 
-    @Override
-    public String accept() {
-        CommunityTarget target = new CommunityTarget();
+    public ArrayList<Pair<String, Integer>> getAllConnectedDevices(List<Switch> switches) {
+        ArrayList<Pair<String, Integer>> all = new ArrayList<>();
+
+        for (Switch s : switches) {
+            var l = getConnectedDevices(s);
+            all.addAll(l);
+        }
+
+        return all;
+    }
+
+    private ArrayList<Pair<String, Integer>> getConnectedDevices(Switch s) {
+        ArrayList<Pair<String, Integer>> devices = new ArrayList<>();
+        var target = new CommunityTarget();
         target.setCommunity(new OctetString("public"));//TODO: store in database
-        target.setAddress(GenericAddress.parse("udp:192.168.1.254/161"));
+
+        long ipInt = s.getIp();
+        String ip = String.format("%d.%d.%d.%d",
+                (ipInt >> 24 & 0xff),
+                (ipInt >> 16 & 0xff),
+                (ipInt >> 8 & 0xff),
+                (ipInt & 0xff));
+        System.out.println(ip);
+
+        target.setAddress(GenericAddress.parse("udp:" + ip + "/161"));
         target.setRetries(2);
         target.setTimeout(1500);
         target.setVersion(SnmpConstants.version2c);
 
-        Map<String, String> result;
+        Map<String, String> result = null;
 
         try {
             result = doWalk(OID_PORTS, target);
         } catch (Exception e) {
-            return e.getMessage();
+            e.printStackTrace();
+            System.exit(1);
         }
-
-        HashMap<String, Integer> connectedDevices = new HashMap<>();
 
         for (Map.Entry<String, String> entry : result.entrySet()) {
             String mac = dotNotationToMAC(
                     entry.getKey().substring(OID_PORTS.length() + 1));
             int port = Integer.parseInt(entry.getValue());
-            connectedDevices.put(mac, port);
+            devices.add(new Pair(mac, port));
         }
 
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        return gson.toJson(connectedDevices);
+        return devices;
     }
 
     //TODO: write tests
