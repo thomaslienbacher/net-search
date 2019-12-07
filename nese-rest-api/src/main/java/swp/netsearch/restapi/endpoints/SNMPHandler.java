@@ -46,7 +46,7 @@ public class SNMPHandler {
     private ArrayList<Pair<String, Integer>> getConnectedDevices(Switch s) {
         ArrayList<Pair<String, Integer>> devices = new ArrayList<>();
         var target = new CommunityTarget();
-        target.setCommunity(new OctetString("public"));//TODO: store in database
+        target.setCommunity(new OctetString(s.getCommunity_string()));
 
         long ipInt = s.getIp();
         String ip = String.format("%d.%d.%d.%d",

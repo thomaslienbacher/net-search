@@ -14,6 +14,7 @@ public class Switch {
     int id_switch;
     String name;
     long ip;//int isn't big enough because of the sign
+    String community_string;
 
     public Switch() {
     }
@@ -44,12 +45,21 @@ public class Switch {
         this.ip = ip;
     }
 
+    public String getCommunity_string() {
+        return community_string;
+    }
+
+    public void setCommunity_string(String community_string) {
+        this.community_string = community_string;
+    }
+
     @Override
     public String toString() {
         return "Switch{" +
                 "id_switch=" + id_switch +
                 ", name='" + name + '\'' +
                 ", ip=" + ip +
+                ", community_string='" + community_string + '\'' +
                 '}';
     }
 }
