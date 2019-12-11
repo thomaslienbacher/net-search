@@ -12,10 +12,19 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
  * @author Thomas Lienbacher
  */
 public class Database {
-    public Session session;
-    private SessionFactory sessionFactory;
+    private static Session session;
+    private static SessionFactory sessionFactory;
 
-    public Database() {
+    private Database() {
+    }
+
+    public static Session session() {
+        assert sessionFactory != null;
+        assert session != null;
+        return session;
+    }
+
+    public static void init() {
         final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
                 .configure()
                 .build();
@@ -29,7 +38,7 @@ public class Database {
         session = sessionFactory.openSession();
     }
 
-    public void close() {
+    public static void close() {
         session.close();
         sessionFactory.close();
     }

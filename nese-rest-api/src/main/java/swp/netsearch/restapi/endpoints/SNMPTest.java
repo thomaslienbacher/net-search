@@ -1,6 +1,8 @@
 package swp.netsearch.restapi.endpoints;
 
 import com.google.gson.GsonBuilder;
+import org.restlet.resource.Get;
+import org.restlet.resource.ServerResource;
 import swp.netsearch.restapi.models.Database;
 import swp.netsearch.restapi.models.Switch;
 
@@ -9,13 +11,11 @@ import swp.netsearch.restapi.models.Switch;
  *
  * @author Thomas Lienbacher
  */
-public class SNMPTest extends Endpoint {
+public class SNMPTest extends ServerResource {
 
-    @Override
+    @Get
     public String accept() {
-        var db = new Database();
-        var switches = db.session.createQuery("SELECT T FROM Switch T", Switch.class).getResultList();
-        db.close();
+        var switches = Database.session().createQuery("SELECT T FROM Switch T", Switch.class).getResultList();
         var devs = new SNMPHandler().getAllConnectedDevices(switches);
         var gson = new GsonBuilder().setPrettyPrinting().create();
         return gson.toJson(devs);
