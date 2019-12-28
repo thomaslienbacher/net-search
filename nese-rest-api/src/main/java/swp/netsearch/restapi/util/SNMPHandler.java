@@ -1,4 +1,4 @@
-package swp.netsearch.restapi.endpoints;
+package swp.netsearch.restapi.util;
 
 import org.snmp4j.CommunityTarget;
 import org.snmp4j.Snmp;
@@ -36,7 +36,7 @@ public class SNMPHandler {
         ArrayList<Pair<String, Integer>> all = new ArrayList<>();
 
         for (Switch s : switches) {
-            var l = getConnectedDevices(s);
+            List l = getConnectedDevices(s);
             all.addAll(l);
         }
 
@@ -45,7 +45,7 @@ public class SNMPHandler {
 
     private ArrayList<Pair<String, Integer>> getConnectedDevices(Switch s) {
         ArrayList<Pair<String, Integer>> devices = new ArrayList<>();
-        var target = new CommunityTarget();
+        CommunityTarget target = new CommunityTarget();
         target.setCommunity(new OctetString(s.getCommunity_string()));
 
         long ipInt = s.getIp();
@@ -82,7 +82,7 @@ public class SNMPHandler {
 
     //TODO: write tests
     private String dotNotationToMAC(String dotNotation) {
-        var parts = dotNotation.split("\\.");
+        String[] parts = dotNotation.split("\\.");
         StringBuilder mac = new StringBuilder();
 
         for (int i = 0; i < parts.length; i++) {
