@@ -27,6 +27,6 @@ public class Main {
             e.printStackTrace();
         }
 
-        Database.close();
+        Runtime.getRuntime().addShutdownHook(new Thread(Database::close));
     }
 }
