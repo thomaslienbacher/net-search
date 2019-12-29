@@ -1,4 +1,4 @@
-package swp.netsearch.restapi;
+package swp.netsearch.restapi.endpoints;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

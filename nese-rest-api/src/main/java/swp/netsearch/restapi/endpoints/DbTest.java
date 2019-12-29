@@ -1,4 +1,4 @@
-package swp.netsearch.restapi;
+package swp.netsearch.restapi.endpoints;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -16,7 +16,7 @@ import java.util.List;
  * @author Thomas Lienbacher
  */
 @Path("/dbtest")
-public class DBTest {
+public class DbTest {
 
     @GET
     @Produces("application/json")

@@ -24,7 +24,7 @@ import java.util.TreeMap;
  *
  * @author Thomas Lienbacher
  */
-public class SNMPHandler {
+public class SnmpHandler {
 
     /*
      * This may only work on CISCO SF 300-24 24-Port 10/100 Managed Switch
@@ -48,6 +48,7 @@ public class SNMPHandler {
         CommunityTarget target = new CommunityTarget();
         target.setCommunity(new OctetString(s.getCommunity_string()));
 
+        //TODO: create function
         long ipInt = s.getIp();
         String ip = String.format("%d.%d.%d.%d",
                 (ipInt >> 24 & 0xff),

@@ -11,6 +11,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
  *
  * @author Thomas Lienbacher
  */
+@Deprecated
 public class Database {
     private static Session session;
     private static SessionFactory sessionFactory;
