@@ -13,7 +13,7 @@ import javax.ws.rs.ext.Provider;
  *
  * @author Thomas Lienbacher
  */
-@Provider
+//@Provider TODO: uncomment to activate, is deactivated for better debugging
 public class ErrorMapper implements ExceptionMapper<Exception> {
 
     public Response toResponse(Exception exception) {

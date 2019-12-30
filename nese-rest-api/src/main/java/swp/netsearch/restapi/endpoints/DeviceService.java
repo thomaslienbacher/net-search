@@ -40,7 +40,7 @@ public class DeviceService {
     @GET
     @Produces("application/json")
     @Path("{id}")
-    public Response get(@PathParam("id") int id) {
+    public Response get(@PathParam("id") int id) {//TODO: check if all parameters have been supplied
         dao.openSession();
         Device d = dao.get(id);
 
@@ -55,7 +55,7 @@ public class DeviceService {
 
     @POST
     @Produces("application/json")
-    public Response update(@QueryParam("id") int id,
+    public Response update(@QueryParam("id") int id,//TODO: check if all parameters have been supplied
                            @QueryParam("name") String name,
                            @QueryParam("mac") String mac) {
         if (!Utils.validateMac(mac)) {
@@ -81,7 +81,7 @@ public class DeviceService {
 
     @PUT
     @Produces("application/json")
-    public Response insert(@QueryParam("name") String name,
+    public Response insert(@QueryParam("name") String name,//TODO: check if all parameters have been supplied
                            @QueryParam("mac") String mac) {
         if (!Utils.validateMac(mac)) {
             Message m = new Message("error: mac address not valid");
@@ -100,16 +100,15 @@ public class DeviceService {
     @DELETE
     @Produces("application/json")
     @Path("{id}")
-    public Response delete(@PathParam("id") int id) {
+    public Response delete(@PathParam("id") int id) {//TODO: check if all parameters have been supplied
         dao.openSessionTransactional();
+        Device device = dao.get(id);
 
-        if (dao.get(id) == null) {
+        if (device == null) {
             Message m = new Message("error: no device with id " + id);
             return Response.status(Status.BAD_REQUEST).entity(m.toJson()).build();
         }
 
-        Device device = new Device();
-        device.setId_device(id);
         dao.delete(device);
         dao.closeSessionTransactional();
         Message m = new Message("succesfully deleted " + id);

@@ -48,13 +48,7 @@ public class SnmpHandler {
         CommunityTarget target = new CommunityTarget();
         target.setCommunity(new OctetString(s.getCommunity_string()));
 
-        //TODO: create function
-        long ipInt = s.getIp();
-        String ip = String.format("%d.%d.%d.%d",
-                (ipInt >> 24 & 0xff),
-                (ipInt >> 16 & 0xff),
-                (ipInt >> 8 & 0xff),
-                (ipInt & 0xff));
+        String ip = Utils.intToIp(s.getIp());
         System.out.println(ip);
 
         target.setAddress(GenericAddress.parse("udp:" + ip + "/161"));
