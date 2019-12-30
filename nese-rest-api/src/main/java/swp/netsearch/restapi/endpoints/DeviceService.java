@@ -37,10 +37,14 @@ public class DeviceService {
         return Response.status(Status.OK).entity(gson.toJson(all)).build();
     }
 
+    /*
+     * id doesn't need to be checked because if its not there the request will be redirected and
+     * if its not a number it will be interpreted as another sub path
+     */
     @GET
     @Produces("application/json")
     @Path("{id}")
-    public Response get(@PathParam("id") int id) {//TODO: check if all parameters have been supplied
+    public Response get(@PathParam("id") int id) {
         dao.openSession();
         Device d = dao.get(id);
 
@@ -55,9 +59,24 @@ public class DeviceService {
 
     @POST
     @Produces("application/json")
-    public Response update(@QueryParam("id") int id,//TODO: check if all parameters have been supplied
+    public Response update(@QueryParam("id") Integer id,
                            @QueryParam("name") String name,
                            @QueryParam("mac") String mac) {
+        if (id == null) {
+            Message m = new Message("error: id wasn't supplied");
+            return Response.status(Status.BAD_REQUEST).entity(m.toJson()).build();
+        }
+
+        if (name == null) {
+            Message m = new Message("error: name wasn't supplied");
+            return Response.status(Status.BAD_REQUEST).entity(m.toJson()).build();
+        }
+
+        if (mac == null) {
+            Message m = new Message("error: mac wasn't supplied");
+            return Response.status(Status.BAD_REQUEST).entity(m.toJson()).build();
+        }
+
         if (!Utils.validateMac(mac)) {
             Message m = new Message("error: mac address not valid");
             return Response.status(Status.BAD_REQUEST).entity(m.toJson()).build();
@@ -65,13 +84,12 @@ public class DeviceService {
 
         dao.openSessionTransactional();
 
-        if (dao.get(id) == null) {
+        Device device = dao.get(id);
+        if (device == null) {
             Message m = new Message("error: no device with id " + id);
             return Response.status(Status.BAD_REQUEST).entity(m.toJson()).build();
         }
 
-        Device device = new Device();
-        device.setId_device(id);
         device.setName(name);
         device.setMac(mac);
         dao.update(device);
@@ -83,6 +101,16 @@ public class DeviceService {
     @Produces("application/json")
     public Response insert(@QueryParam("name") String name,//TODO: check if all parameters have been supplied
                            @QueryParam("mac") String mac) {
+        if (name == null) {
+            Message m = new Message("error: name wasn't supplied");
+            return Response.status(Status.BAD_REQUEST).entity(m.toJson()).build();
+        }
+
+        if (mac == null) {
+            Message m = new Message("error: mac wasn't supplied");
+            return Response.status(Status.BAD_REQUEST).entity(m.toJson()).build();
+        }
+
         if (!Utils.validateMac(mac)) {
             Message m = new Message("error: mac address not valid");
             return Response.status(Status.BAD_REQUEST).entity(m.toJson()).build();
@@ -97,10 +125,14 @@ public class DeviceService {
         return Response.status(Status.OK).entity(gson.toJson(device)).build();
     }
 
+    /*
+     * id doesn't need to be checked because if its not there the request will be redirected or
+     * method not supported and if its not a number it will be interpreted as another sub path
+     */
     @DELETE
     @Produces("application/json")
     @Path("{id}")
-    public Response delete(@PathParam("id") int id) {//TODO: check if all parameters have been supplied
+    public Response delete(@PathParam("id") int id) {
         dao.openSessionTransactional();
         Device device = dao.get(id);
 

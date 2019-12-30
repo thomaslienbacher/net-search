@@ -85,7 +85,7 @@ public class SnmpHandler {
             if (i < parts.length - 1) mac.append(":");
         }
 
-        return mac.toString();
+        return mac.toString().toLowerCase();
     }
 
     private Map<String, String> doWalk(String tableOid, Target target) throws IOException {
