@@ -16,6 +16,7 @@ import java.util.List;
  * @author Thomas Lienbacher
  */
 @Path("/dbtest")
+@Deprecated
 public class DbTest {
 
     @GET

@@ -18,6 +18,7 @@ import java.util.List;
  * @author Thomas Lienbacher
  */
 @Path("/snmptest")
+@Deprecated
 public class SnmpTest {
 
     @GET

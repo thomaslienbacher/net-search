@@ -98,7 +98,7 @@ public class DeviceService {
     }
 
     @DELETE
-    @Produces("text/plain")
+    @Produces("application/json")
     @Path("{id}")
     public Response delete(@PathParam("id") int id) {
         dao.openSessionTransactional();
