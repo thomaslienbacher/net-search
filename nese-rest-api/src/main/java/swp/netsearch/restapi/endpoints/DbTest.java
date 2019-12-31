@@ -26,7 +26,7 @@ public class DbTest {
         List switches = Database.session().createQuery("SELECT T FROM Switch T", Switch.class).getResultList();
         List devices = Database.session().createQuery("SELECT T FROM Device T", Device.class).getResultList();
         List rooms = Database.session().createQuery("SELECT T FROM Room T", Room.class).getResultList();
-        List connections = Database.session().createQuery("SELECT T FROM AssignedConnection T", AssignedConnection.class).getResultList();
+        List connections = Database.session().createQuery("SELECT T FROM PortConnection T", PortConnection.class).getResultList();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String output = gson.toJson(switches) + "\n" +
                 gson.toJson(devices) + "\n" +

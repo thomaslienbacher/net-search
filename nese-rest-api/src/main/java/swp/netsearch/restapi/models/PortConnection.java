@@ -10,13 +10,13 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "port_connections")
-public class AssignedConnection {
+public class PortConnection {
     int id_port_connection;
     int switch_id;
     int room_id;
     int port;
 
-    public AssignedConnection() {
+    public PortConnection() {
     }
 
     @Id

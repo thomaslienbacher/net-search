@@ -14,7 +14,7 @@
         <mapping class="swp.netsearch.restapi.models.Device"/>
         <mapping class="swp.netsearch.restapi.models.Switch"/>
         <mapping class="swp.netsearch.restapi.models.Room"/>
-        <mapping class="swp.netsearch.restapi.models.AssignedConnection"/>
+        <mapping class="swp.netsearch.restapi.models.PortConnection"/>
 
     </session-factory>
 </hibernate-configuration>
