@@ -10,7 +10,6 @@ import swp.netsearch.restapi.util.Utils;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import java.util.List;
 
 /**
  * Created on 28.12.2019.
@@ -32,7 +31,7 @@ public class DeviceService {
     @Produces("application/json")
     public Response all() {
         dao.openSession();
-        List<Device> all = dao.all();
+        var all = dao.all();
         dao.closeSession();
         return Response.status(Status.OK).entity(gson.toJson(all)).build();
     }
@@ -46,10 +45,10 @@ public class DeviceService {
     @Path("{id}")
     public Response get(@PathParam("id") int id) {
         dao.openSession();
-        Device d = dao.get(id);
+        var d = dao.get(id);
 
         if (d == null) {
-            Message m = new Message("error: no device with id " + id);
+            var m = new Message("error: no device with id " + id);
             return Response.status(Status.BAD_REQUEST).entity(m.toJson()).build();
         }
 
@@ -63,30 +62,30 @@ public class DeviceService {
                            @QueryParam("name") String name,
                            @QueryParam("mac") String mac) {
         if (id == null) {
-            Message m = new Message("error: id wasn't supplied");
+            var m = new Message("error: id wasn't supplied");
             return Response.status(Status.BAD_REQUEST).entity(m.toJson()).build();
         }
 
         if (name == null) {
-            Message m = new Message("error: name wasn't supplied");
+            var m = new Message("error: name wasn't supplied");
             return Response.status(Status.BAD_REQUEST).entity(m.toJson()).build();
         }
 
         if (mac == null) {
-            Message m = new Message("error: mac wasn't supplied");
+            var m = new Message("error: mac wasn't supplied");
             return Response.status(Status.BAD_REQUEST).entity(m.toJson()).build();
         }
 
         if (!Utils.validateMac(mac)) {
-            Message m = new Message("error: mac address not valid");
+            var m = new Message("error: mac address not valid");
             return Response.status(Status.BAD_REQUEST).entity(m.toJson()).build();
         }
 
         dao.openSessionTransactional();
 
-        Device device = dao.get(id);
+        var device = dao.get(id);
         if (device == null) {
-            Message m = new Message("error: no device with id " + id);
+            var m = new Message("error: no device with id " + id);
             return Response.status(Status.BAD_REQUEST).entity(m.toJson()).build();
         }
 
@@ -99,24 +98,24 @@ public class DeviceService {
 
     @PUT
     @Produces("application/json")
-    public Response insert(@QueryParam("name") String name,//TODO: check if all parameters have been supplied
+    public Response insert(@QueryParam("name") String name,
                            @QueryParam("mac") String mac) {
         if (name == null) {
-            Message m = new Message("error: name wasn't supplied");
+            var m = new Message("error: name wasn't supplied");
             return Response.status(Status.BAD_REQUEST).entity(m.toJson()).build();
         }
 
         if (mac == null) {
-            Message m = new Message("error: mac wasn't supplied");
+            var m = new Message("error: mac wasn't supplied");
             return Response.status(Status.BAD_REQUEST).entity(m.toJson()).build();
         }
 
         if (!Utils.validateMac(mac)) {
-            Message m = new Message("error: mac address not valid");
+            var m = new Message("error: mac address not valid");
             return Response.status(Status.BAD_REQUEST).entity(m.toJson()).build();
         }
 
-        Device device = new Device();
+        var device = new Device();
         device.setName(name);
         device.setMac(mac);
         dao.openSessionTransactional();
@@ -134,16 +133,16 @@ public class DeviceService {
     @Path("{id}")
     public Response delete(@PathParam("id") int id) {
         dao.openSessionTransactional();
-        Device device = dao.get(id);
+        var device = dao.get(id);
 
         if (device == null) {
-            Message m = new Message("error: no device with id " + id);
+            var m = new Message("error: no device with id " + id);
             return Response.status(Status.BAD_REQUEST).entity(m.toJson()).build();
         }
 
         dao.delete(device);
         dao.closeSessionTransactional();
-        Message m = new Message("succesfully deleted " + id);
+        var m = new Message("succesfully deleted " + id);
         return Response.status(Status.OK).entity(m.toJson()).build();
     }
 }

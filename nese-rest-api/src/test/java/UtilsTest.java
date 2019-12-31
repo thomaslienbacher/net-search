@@ -12,7 +12,7 @@ public class UtilsTest {
 
     @Test
     public void validateMac() {
-        String mac = "54:C2:45:A0:19:70";
+        var mac = "54:C2:45:A0:19:70";
         assertTrue(Utils.validateMac(mac));
 
         mac = "00:FF:ff:aa:99:11";
@@ -27,7 +27,7 @@ public class UtilsTest {
 
     @Test
     public void validateIp() {
-        String ip = "128.232.3.12";
+        var ip = "128.232.3.12";
         assertTrue(Utils.validateIp(ip));
 
         ip = "0.0.0.0";
@@ -60,7 +60,7 @@ public class UtilsTest {
 
     @Test
     public void ipToInt() {
-        String ip = "128.129.1.0";
+        var ip = "128.129.1.0";
         assertEquals(2155938048L, Utils.ipToInt(ip));
 
         ip = "0.0.0.0";
@@ -69,5 +69,4 @@ public class UtilsTest {
         ip = "255.255.255.255";
         assertEquals(4294967295L, Utils.ipToInt(ip));
     }
-
 }

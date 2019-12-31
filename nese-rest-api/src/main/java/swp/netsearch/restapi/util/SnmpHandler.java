@@ -11,7 +11,6 @@ import org.snmp4j.util.DefaultPDUFactory;
 import org.snmp4j.util.TreeEvent;
 import org.snmp4j.util.TreeUtils;
 import swp.netsearch.restapi.models.Switch;
-import swp.netsearch.restapi.util.Pair;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,7 +48,6 @@ public class SnmpHandler {
         target.setCommunity(new OctetString(s.getCommunity_string()));
 
         String ip = Utils.intToIp(s.getIp());
-        System.out.println(ip);
 
         target.setAddress(GenericAddress.parse("udp:" + ip + "/161"));
         target.setRetries(2);
@@ -62,7 +60,7 @@ public class SnmpHandler {
             result = doWalk(OID_PORTS, target);
         } catch (Exception e) {
             e.printStackTrace();
-            System.exit(1);
+            System.exit(1);//TODO: remove
         }
 
         for (Map.Entry<String, String> entry : result.entrySet()) {
@@ -75,7 +73,6 @@ public class SnmpHandler {
         return devices;
     }
 
-    //TODO: write tests
     private String dotNotationToMAC(String dotNotation) {
         String[] parts = dotNotation.split("\\.");
         StringBuilder mac = new StringBuilder();
@@ -97,7 +94,7 @@ public class SnmpHandler {
         TreeUtils treeUtils = new TreeUtils(snmp, new DefaultPDUFactory());
         List<TreeEvent> events = treeUtils.getSubtree(target, new OID(tableOid));
         if (events == null || events.size() == 0) {
-            System.err.println("Error: Unable to read table...");
+            System.err.println("Error: Unable to read table...");//TODO: proper error handling
             return result;
         }
 
@@ -106,7 +103,7 @@ public class SnmpHandler {
                 continue;
             }
             if (event.isError()) {
-                System.err.println("Error: table OID [" + tableOid + "] " + event.getErrorMessage());
+                System.err.println("Error: table OID [" + tableOid + "] " + event.getErrorMessage());//TODO: proper error handling
                 continue;
             }
 

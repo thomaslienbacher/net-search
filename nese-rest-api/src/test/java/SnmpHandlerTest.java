@@ -1,8 +1,7 @@
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import swp.netsearch.restapi.util.SnmpHandler;
 
-import java.lang.reflect.Method;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Created on 30.12.2019.
@@ -12,9 +11,9 @@ import java.lang.reflect.Method;
 public class SnmpHandlerTest {
 
     public String _dotNotationToMAC(String s) throws Exception {
-        Method method = SnmpHandler.class.getDeclaredMethod("dotNotationToMAC", String.class);
+        var method = SnmpHandler.class.getDeclaredMethod("dotNotationToMAC", String.class);
         method.setAccessible(true);
-        SnmpHandler sh = new SnmpHandler();
+        var sh = new SnmpHandler();
         return (String) method.invoke(sh, s);
     }
 

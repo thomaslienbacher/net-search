@@ -15,7 +15,8 @@ public class Device {
     String name;
     String mac;
 
-    public Device() {}
+    public Device() {
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

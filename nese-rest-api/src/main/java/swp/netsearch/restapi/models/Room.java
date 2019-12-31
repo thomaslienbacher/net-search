@@ -14,7 +14,8 @@ public class Room {
     int id_room;
     String name;
 
-    public Room() {}
+    public Room() {
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

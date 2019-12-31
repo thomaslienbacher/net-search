@@ -30,7 +30,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         List<String> authorization = headers.get(AUTHORIZATION_PROPERTY);
 
         if (authorization == null || authorization.isEmpty()) {
-            Message m = new Message("error: not authorized");
+            var m = new Message("error: not authorized");
             requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).entity((m.toJson())).build());
             return;
         }
@@ -42,7 +42,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         String password = tokenizer.nextToken();
 
         if (!allowed(username, password)) {
-            Message m = new Message("error: not authorized");
+            var m = new Message("error: not authorized");
             requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).entity((m.toJson())).build());
         }
     }

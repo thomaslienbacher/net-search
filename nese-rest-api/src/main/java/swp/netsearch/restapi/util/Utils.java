@@ -8,12 +8,12 @@ package swp.netsearch.restapi.util;
 public class Utils {
 
     public static boolean validateMac(String mac) {
-        String regex = "^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$"; //https://stackoverflow.com/a/4260512/5687665
+        var regex = "^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$"; //https://stackoverflow.com/a/4260512/5687665
         return mac.matches(regex);
     }
 
     public static boolean validateIp(String ip) {
-        String regex = "^(?:(?:^|\\.)(?:2(?:5[0-5]|[0-4]\\d)|1?\\d?\\d)){4}$"; //https://www.regextester.com/95309
+        var regex = "^(?:(?:^|\\.)(?:2(?:5[0-5]|[0-4]\\d)|1?\\d?\\d)){4}$"; //https://www.regextester.com/95309
         return ip.matches(regex);
     }
 
@@ -26,7 +26,7 @@ public class Utils {
     }
 
     public static long ipToInt(String ip) {
-        String[] parts = ip.split("\\.");
+        var parts = ip.split("\\.");
         return (Long.parseLong(parts[0]) << 24) +
                 (Long.parseLong(parts[1]) << 16) +
                 (Long.parseLong(parts[2]) << 8) +
