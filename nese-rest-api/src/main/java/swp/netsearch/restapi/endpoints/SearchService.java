@@ -7,11 +7,12 @@ import swp.netsearch.restapi.models.PortConnection;
 import swp.netsearch.restapi.models.Room;
 import swp.netsearch.restapi.models.Switch;
 import swp.netsearch.restapi.util.GenericDao;
-import swp.netsearch.restapi.util.Pair;
+import swp.netsearch.restapi.util.Message;
 import swp.netsearch.restapi.util.SnmpHandler;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 
@@ -21,7 +22,6 @@ import java.util.ArrayList;
  * @author Thomas Lienbacher
  */
 @Path("/search")
-@Deprecated
 public class SearchService {
 
     private GenericDao<Device> devices;
@@ -38,7 +38,18 @@ public class SearchService {
         gson = new GsonBuilder().setPrettyPrinting().create();
     }
 
+    private static class DeviceInRoom {
+        private Device device;
+        private Room room;
+
+        public DeviceInRoom(Device device, Room room) {
+            this.device = device;
+            this.room = room;
+        }
+    }
+
     @GET
+    @Produces("application/json")
     public Response search() {
         devices.openSession();
         switches.openSession();
@@ -46,26 +57,30 @@ public class SearchService {
         rooms.openSession();
 
         var allDevices = devices.all();
-        var devicesInRooms = new ArrayList<Pair<Device, Room>>();
+        ArrayList<DeviceInRoom> devicesInRooms = new ArrayList<>();
 
         for (var pc : portConnections.all()) {
             var sw = switches.get(pc.getSwitch_id());
             var connectedDevices = new SnmpHandler().getConnectedDevices(sw);
 
+            if(connectedDevices == null) {
+                var m = new Message("error: couldn't read from switch " + sw);
+                return Response.status(Response.Status.BAD_REQUEST).entity(m.toJson()).build();
+            }
+
             for (var cd : connectedDevices) {
-                if (cd.b == pc.getPort()) {
-                    System.out.println(cd + " : " + pc);
+                if (cd.port == pc.getPort()) {
                     var room = rooms.get(pc.getRoom_id());
                     Device device = null;
 
                     for (var d : allDevices) {
-                        if (d.getMac().equals(cd.a)) {
+                        if (d.getMac().equals(cd.mac)) {
                             device = d;
                             break;
                         }
                     }
 
-                    if (device != null) devicesInRooms.add(new Pair(device, room));
+                    if (device != null) devicesInRooms.add(new DeviceInRoom(device, room));
                 }
             }
         }

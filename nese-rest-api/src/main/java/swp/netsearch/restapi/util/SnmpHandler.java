@@ -12,7 +12,6 @@ import org.snmp4j.util.TreeEvent;
 import org.snmp4j.util.TreeUtils;
 import swp.netsearch.restapi.models.Switch;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,8 +30,8 @@ public class SnmpHandler {
      */
     static final String OID_PORTS = ".1.3.6.1.2.1.17.4.3.1.2";
 
-    public ArrayList<Pair<String, Integer>> getAllConnectedDevices(List<Switch> switches) {
-        ArrayList<Pair<String, Integer>> all = new ArrayList<>();
+    public ArrayList<MacWithPort> getAllConnectedDevices(List<Switch> switches) {
+        ArrayList<MacWithPort> all = new ArrayList<>();
 
         for (Switch s : switches) {
             List l = getConnectedDevices(s);
@@ -42,8 +41,12 @@ public class SnmpHandler {
         return all;
     }
 
-    public ArrayList<Pair<String, Integer>> getConnectedDevices(Switch s) {
-        ArrayList<Pair<String, Integer>> devices = new ArrayList<>();
+    // returns null on error
+    public ArrayList<MacWithPort> getConnectedDevices(Switch s) {
+        //TODO: remove, only for testing without switch
+        //return new ArrayList<>(List.of(new MacWithPort("00:00:00:00:00:00".toLowerCase(), 0), new MacWithPort("1C:1B:0D:96:C6:6D".toLowerCase(), 1)));
+
+        ArrayList<MacWithPort> devices = new ArrayList<>();
         CommunityTarget target = new CommunityTarget();
         target.setCommunity(new OctetString(s.getCommunity_string()));
 
@@ -59,15 +62,14 @@ public class SnmpHandler {
         try {
             result = doWalk(OID_PORTS, target);
         } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(1);//TODO: remove
+            return null;
         }
 
         for (Map.Entry<String, String> entry : result.entrySet()) {
             String mac = dotNotationToMAC(
                     entry.getKey().substring(OID_PORTS.length() + 1));
             int port = Integer.parseInt(entry.getValue());
-            devices.add(new Pair(mac, port));
+            devices.add(new MacWithPort(mac, port));
         }
 
         return devices;
@@ -85,7 +87,7 @@ public class SnmpHandler {
         return mac.toString().toLowerCase();
     }
 
-    private Map<String, String> doWalk(String tableOid, Target target) throws IOException {
+    private Map<String, String> doWalk(String tableOid, Target target) throws Exception {
         Map<String, String> result = new TreeMap<>();
         TransportMapping<? extends Address> transport = new DefaultUdpTransportMapping();
         Snmp snmp = new Snmp(transport);
@@ -95,7 +97,7 @@ public class SnmpHandler {
         List<TreeEvent> events = treeUtils.getSubtree(target, new OID(tableOid));
         if (events == null || events.size() == 0) {
             System.err.println("Error: Unable to read table...");//TODO: proper error handling
-            return result;
+            throw new Exception("Error: Unable to read table...");
         }
 
         for (TreeEvent event : events) {
@@ -104,7 +106,8 @@ public class SnmpHandler {
             }
             if (event.isError()) {
                 System.err.println("Error: table OID [" + tableOid + "] " + event.getErrorMessage());//TODO: proper error handling
-                continue;
+                throw new Exception("Error: table OID [" + tableOid + "] " + event.getErrorMessage());
+                //continue;
             }
 
             VariableBinding[] varBindings = event.getVariableBindings();
