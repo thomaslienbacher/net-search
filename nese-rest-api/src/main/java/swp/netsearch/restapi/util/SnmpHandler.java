@@ -42,7 +42,7 @@ public class SnmpHandler {
         return all;
     }
 
-    private ArrayList<Pair<String, Integer>> getConnectedDevices(Switch s) {
+    public ArrayList<Pair<String, Integer>> getConnectedDevices(Switch s) {
         ArrayList<Pair<String, Integer>> devices = new ArrayList<>();
         CommunityTarget target = new CommunityTarget();
         target.setCommunity(new OctetString(s.getCommunity_string()));
