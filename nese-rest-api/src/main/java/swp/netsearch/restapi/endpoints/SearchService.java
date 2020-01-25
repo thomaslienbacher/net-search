@@ -63,7 +63,7 @@ public class SearchService {
             var sw = switches.get(pc.getSwitch_id());
             var connectedDevices = new SnmpHandler().getConnectedDevices(sw);
 
-            if(connectedDevices == null) {
+            if (connectedDevices == null) {
                 var m = new Message("error: couldn't read from switch " + sw);
                 return Response.status(Response.Status.BAD_REQUEST).entity(m.toJson()).build();
             }

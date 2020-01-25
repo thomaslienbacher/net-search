@@ -1,7 +1,5 @@
 package swp.netsearch.restapi.models;
 
-import swp.netsearch.restapi.util.Utils;
-
 import javax.persistence.*;
 
 /**
@@ -39,12 +37,12 @@ public class Switch {
         this.name = name;
     }
 
-    public long getIp() {
-        return Utils.ipToInt(ip);
+    public String getIp() {
+        return ip;
     }
 
-    public void setIp(long ip) {
-        this.ip = Utils.intToIp(ip);
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 
     public String getCommunity_string() {

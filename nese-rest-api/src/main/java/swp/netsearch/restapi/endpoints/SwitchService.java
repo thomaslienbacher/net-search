@@ -96,7 +96,7 @@ public class SwitchService {
         }
 
         _switch.setName(name);
-        _switch.setIp(Utils.ipToInt(ip));
+        _switch.setIp(ip);
         _switch.setCommunity_string(community_string);
         dao.update(_switch);
         dao.closeSessionTransactional();
@@ -130,7 +130,7 @@ public class SwitchService {
 
         var _switch = new Switch();
         _switch.setName(name);
-        _switch.setIp(Utils.ipToInt(ip));
+        _switch.setIp(ip);
         _switch.setCommunity_string(community_string);
         dao.openSessionTransactional();
         dao.insert(_switch);
