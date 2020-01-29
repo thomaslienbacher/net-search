@@ -44,6 +44,15 @@ public class UtilsTest {
 
         ip = "111.222.233.2444";
         assertFalse(Utils.validateIp(ip));
+
+        ip = "001.002.003.004";
+        assertFalse(Utils.validateIp(ip));
+
+        ip = "1.02.003.200";
+        assertFalse(Utils.validateIp(ip));
+
+        ip = "01.02.03.01";
+        assertFalse(Utils.validateIp(ip));
     }
 
     @Test

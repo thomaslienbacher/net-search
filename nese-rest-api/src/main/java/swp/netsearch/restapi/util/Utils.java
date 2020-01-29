@@ -13,7 +13,7 @@ public class Utils {
     }
 
     public static boolean validateIp(String ip) {
-        var regex = "^(?:(?:^|\\.)(?:2(?:5[0-5]|[0-4]\\d)|1?\\d?\\d)){4}$"; //https://www.regextester.com/95309
+        var regex = "^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"; https://www.oreilly.com/library/view/regular-expressions-cookbook/9781449327453/ch08s16.html
         return ip.matches(regex);
     }
 

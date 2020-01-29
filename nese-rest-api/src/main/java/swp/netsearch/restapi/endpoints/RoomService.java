@@ -55,7 +55,7 @@ public class RoomService {
         return Response.status(Response.Status.OK).entity(gson.toJson(d)).build();
     }
 
-    @POST
+    @PUT
     @Produces("application/json")
     public Response update(@QueryParam("id") Integer id,
                            @QueryParam("name") String name) {
@@ -83,7 +83,7 @@ public class RoomService {
         return Response.status(Response.Status.OK).entity(gson.toJson(room)).build();
     }
 
-    @PUT
+    @POST
     @Produces("application/json")
     public Response insert(@QueryParam("name") String name) {
         if (name == null) {

@@ -56,7 +56,7 @@ public class PortConnectionService {
         return Response.status(Response.Status.OK).entity(gson.toJson(d)).build();
     }
 
-    @POST
+    @PUT
     @Produces("application/json")
     public Response update(@QueryParam("id") Integer id,
                            @QueryParam("switch_id") Integer switch_id,
@@ -114,7 +114,7 @@ public class PortConnectionService {
         return Response.status(Response.Status.OK).entity(gson.toJson(portConnection)).build();
     }
 
-    @PUT
+    @POST
     @Produces("application/json")
     public Response insert(@QueryParam("switch_id") Integer switch_id,
                            @QueryParam("room_id") Integer room_id,

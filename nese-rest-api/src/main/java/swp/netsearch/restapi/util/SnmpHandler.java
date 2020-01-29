@@ -50,9 +50,7 @@ public class SnmpHandler {
         CommunityTarget target = new CommunityTarget();
         target.setCommunity(new OctetString(s.getCommunity_string()));
 
-        String ip = Utils.intToIp(s.getIp());
-
-        target.setAddress(GenericAddress.parse("udp:" + ip + "/161"));
+        target.setAddress(GenericAddress.parse("udp:" + s.getIp() + "/161"));
         target.setRetries(2);
         target.setTimeout(1500);
         target.setVersion(SnmpConstants.version2c);

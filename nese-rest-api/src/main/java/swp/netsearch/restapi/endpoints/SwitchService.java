@@ -56,7 +56,7 @@ public class SwitchService {
         return Response.status(Response.Status.OK).entity(gson.toJson(d)).build();
     }
 
-    @POST
+    @PUT
     @Produces("application/json")
     public Response update(@QueryParam("id") Integer id,
                            @QueryParam("name") String name,
@@ -103,7 +103,7 @@ public class SwitchService {
         return Response.status(Response.Status.OK).entity(gson.toJson(_switch)).build();
     }
 
-    @PUT
+    @POST
     @Produces("application/json")
     public Response insert(@QueryParam("name") String name,
                            @QueryParam("ip") String ip,
