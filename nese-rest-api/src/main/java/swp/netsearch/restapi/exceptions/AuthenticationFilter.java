@@ -42,7 +42,6 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     private boolean allowed(String token) {
         Dotenv dotenv = Dotenv.load();
         String env_token = dotenv.get("API_TOKEN");
-        System.out.println(env_token);
         return token.equals(env_token);
     }
 }

@@ -12,10 +12,7 @@ import org.snmp4j.util.TreeEvent;
 import org.snmp4j.util.TreeUtils;
 import swp.netsearch.restapi.models.Switch;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Created on 30.11.2019.
@@ -70,7 +67,25 @@ public class SnmpHandler {
             devices.add(new MacWithPort(mac, port));
         }
 
-        return devices;
+        //filter devices for duplicate port numbers
+        var ports = new HashMap<Integer, Integer>();
+        devices.forEach((a) -> {
+            int p = a.port;
+            if (ports.containsKey(p)) {
+                ports.put(p, ports.get(p) + 1);
+            } else {
+                ports.put(p, 1);
+            }
+        });
+
+        var filteredDevices = new ArrayList<MacWithPort>();
+        devices.forEach((a) -> {
+            if (ports.get(a.port) == 1) {
+                filteredDevices.add(a);
+            }
+        });
+
+        return filteredDevices;
     }
 
     private String dotNotationToMAC(String dotNotation) {
