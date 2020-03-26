@@ -4,44 +4,55 @@
     <div class="container">
         <div class="row justify-content-center">
 
+        <div id="liste">
 
             <div class="col-md-10">
-            <div class="card">
-                <div class="card-header">Liste von Räumen mit einem Gerät
-                    <input type="text" class="search" placeholder="Suchen"/>
-                    <button class="btn btn-primary" data-sort="filter"> Sortieren nach RaumNr </button>
-                </div>
-
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-                    <div id="geraete">
-                        <table style="width:100%">
-                            <tr>
-                                <th class="sort" data-sort="raumnr">RaumNr</th>
-                                <th class="sort" data-sort="geraetename">Ger&auml;te Name</th>
-                                <th class="sort" data-sort="macadress">MAC-Adresse</th>
-                            </tr>
-                            @foreach($search as $h)
-                                <tr>
-                                    <td class="roomname">{{ $h->room->name }}</td>
-                                    <td class="devicename">{{ $h->device->name }}</td>
-                                    <td class="devicemac">{{ $h->device->mac }}</td>
-                                </tr>
-                            @endforeach
-                        </table>
+                <div class="card">
+                    <div class="card-header">Liste von Räumen mit einem Gerät
+                        <input type="text" class="search" placeholder="Suchen"/>
+                        <button class="btn btn-primary" data-sort="filter"> Sortieren nach RaumNr </button>
                     </div>
 
+                    <div class="card-body">
+                        @if (session('status'))
+                            <div class="alert alert-success" role="alert">
+                                {{ session('status') }}
+                            </div>
+                        @endif
+
+                            <table style="width:100%">
+                                <tr>
+                                    <th class="sort" data-sort="raumnr">RaumNr</th>
+                                    <th class="sort" data-sort="geraetename">Ger&auml;te Name</th>
+                                    <th class="sort" data-sort="macadress">MAC-Adresse</th>
+                                </tr>
+                                @foreach($search as $h)
+                                    <tr>
+                                        <td class="roomname">{{ $h->room->name }}</td>
+                                        <td class="devicename">{{ $h->device->name }}</td>
+                                        <td class="devicemac">{{ $h->device->mac }}</td>
+                                    </tr>
+                                @endforeach
+                            </table>
+
+
+                    </div>
                 </div>
+
             </div>
 
 
+
+            <div id="raum">
+
                 <div class="pt-5"></div>
                 <div class="card">
-                    <div class="card-header">R&auml;ume</div>
+                    <div class="card-header">R&auml;ume
+                        <button type="submit" value="Submit">Löschen</button>
+                        <button type="submit" value="Submit">Hinzufügen</button>
+                        <button type="submit" value="Submit">Bearbeiten</button>
+
+                    </div>
 
                     <div class="card-body">
                         @if (session('status'))
@@ -52,13 +63,13 @@
                         <div>
                             <table style="width:100%">
                                 <tr>
-                                    <th>Room-ID</th>
-                                    <th>RaumNr</th>
+                                    <th class="sort" data-sort="raumid">Room-ID</th>
+                                    <th class="sort" data-sort="raumnr">RaumNr</th>
                                 </tr>
                                 @foreach($room as $r)
                                     <tr>
-                                        <td>{{ $r->id_room }}</td>
-                                        <td>{{ $r->name }}</td>
+                                        <td class="idroom">{{ $r->id_room }}</td>
+                                        <td class="raumname">{{ $r->name }}</td>
                                     </tr>
                                 @endforeach
                             </table>
@@ -67,9 +78,23 @@
                     </div>
                 </div>
 
+            </div>
+
+
+            <div id="geraet">
+
+
+            </div>
+
                 <div class="pt-5"></div>
                 <div class="card">
-                    <div class="card-header">Ger&auml;te</div>
+                    <div class="card-header">Ger&auml;te
+                        <input type="text" class="search" placeholder="Suchen"/>
+                        <button type="submit" value="Submit">Löschen</button>
+                        <button type="submit" value="Submit">Hinzufügen</button>
+                        <button type="submit" value="Submit">Bearbeiten</button>
+
+                    </div>
                     <div class="card-body">
                         @if (session('status'))
                             <div class="alert alert-success" role="alert">
@@ -98,7 +123,11 @@
 
                 <div class="pt-5"></div>
                 <div class="card">
-                    <div class="card-header">Switches</div>
+                    <div class="card-header">Switches
+                        <button type="submit" value="Submit">Löschen</button>
+                        <button type="submit" value="Submit">Hinzufügen</button>
+                        <button type="submit" value="Submit">Bearbeiten</button>
+                    </div>
                     <div class="card-body">
                         @if (session('status'))
                             <div class="alert alert-success" role="alert">
@@ -129,7 +158,11 @@
 
                 <div class="pt-5"></div>
                 <div class="card">
-                    <div class="card-header">Port Connections</div>
+                    <div class="card-header">Port Connections
+                        <button type="submit" value="Submit">Löschen</button>
+                        <button type="submit" value="Submit">Hinzufügen</button>
+                        <button type="submit" value="Submit">Bearbeiten</button>
+                    </div>
                     <div class="card-body">
                         @if (session('status'))
                             <div class="alert alert-success" role="alert">
@@ -165,10 +198,13 @@
 
     <script>
         var options = {
-            valueNames: [ 'geraete', 'raumnr', 'geraetename', 'macadress' ]
+            valueNames1: [ 'filter', 'geraetename'],
+            valueNames2: [ 'geraet', 'geraetename']
         };
 
-        var geraeteList = new List('geraete', options);
+
+        var listeList = new List('liste', options);
+        var raumList = new List('raum', options);
 
         var idField =$('#id-field'),
             geraeteField = $('#geraete-field'),

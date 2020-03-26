@@ -26,27 +26,27 @@ class HomeController extends Controller
     public function index()
     {
         $client = new Client();
-        $res = $client->get('http://10.200.18.72:8100/nese_rest_api_war/api/search', [
+        $res = $client->get('http://localhost:8100/nese_rest_api_war/api/search', [
             'headers' => [
                 'API_TOKEN' => 'thomas'
             ]
         ]);
-        $switches = $client->get('http://10.200.18.72:8100/nese_rest_api_war/api/switches', [
+        $switches = $client->get('http://localhost:8100/nese_rest_api_war/api/switches', [
             'headers' => [
                 'API_TOKEN' => 'thomas'
             ]
         ]);
-        $rooms = $client->get('http://10.200.18.72:8100/nese_rest_api_war/api/rooms', [
+        $rooms = $client->get('http://localhost:8100/nese_rest_api_war/api/rooms', [
             'headers' => [
                 'API_TOKEN' => 'thomas'
             ]
         ]);
-        $devices = $client->get('http://10.200.18.72:8100/nese_rest_api_war/api/devices', [
+        $devices = $client->get('http://localhost:8100/nese_rest_api_war/api/devices', [
             'headers' => [
                 'API_TOKEN' => 'thomas'
             ]
         ]);
-        $connections = $client->get('http://10.200.18.72:8100/nese_rest_api_war/api/portconnections', [
+        $connections = $client->get('http://localhost:8100/nese_rest_api_war/api/portconnections', [
             'headers' => [
                 'API_TOKEN' => 'thomas'
             ]
