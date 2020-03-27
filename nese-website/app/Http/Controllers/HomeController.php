@@ -25,41 +25,23 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $options = [
+            'headers' => ['API_TOKEN' => env('API_TOKEN')]
+        ];
+
         $client = new Client();
-        $res = $client->get('http://localhost:8100/nese_rest_api_war/api/search', [
-            'headers' => [
-                'API_TOKEN' => 'thomas'
-            ]
-        ]);
-        $switches = $client->get('http://localhost:8100/nese_rest_api_war/api/switches', [
-            'headers' => [
-                'API_TOKEN' => 'thomas'
-            ]
-        ]);
-        $rooms = $client->get('http://localhost:8100/nese_rest_api_war/api/rooms', [
-            'headers' => [
-                'API_TOKEN' => 'thomas'
-            ]
-        ]);
-        $devices = $client->get('http://localhost:8100/nese_rest_api_war/api/devices', [
-            'headers' => [
-                'API_TOKEN' => 'thomas'
-            ]
-        ]);
-        $connections = $client->get('http://localhost:8100/nese_rest_api_war/api/portconnections', [
-            'headers' => [
-                'API_TOKEN' => 'thomas'
-            ]
-        ]);
-
-
+        $res = $client->get('http://localhost:8100/nese_rest_api_war/api/search', $options);
+        $switches = $client->get('http://localhost:8100/nese_rest_api_war/api/switches', $options);
+        $rooms = $client->get('http://localhost:8100/nese_rest_api_war/api/rooms', $options);
+        $devices = $client->get('http://localhost:8100/nese_rest_api_war/api/devices', $options);
+        $connections = $client->get('http://localhost:8100/nese_rest_api_war/api/portconnections', $options);
 
         return view('home', ['search' => json_decode($res->getBody()),
             'switch' => json_decode($switches->getBody()),
             'room' => json_decode($rooms->getBody()),
             'device' => json_decode($devices->getBody()),
             'connection' => json_decode($connections->getBody()),
-            ]);
+        ]);
     }
 
 
