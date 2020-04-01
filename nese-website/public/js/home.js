@@ -93,69 +93,57 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-var options = {
-  valueNames: ['id', 'name', 'age', 'city']
-}; // Init list
+// room dynamic list
+var roomList = new List('room_table', {
+  valueNames: ['id', 'name']
+});
 
-var contactList = new List('contacts', options);
-var idField = $('#id-field'),
-    nameField = $('#name-field'),
-    ageField = $('#age-field'),
-    cityField = $('#city-field'),
-    addBtn = $('#add-btn'),
-    editBtn = $('#edit-btn').hide(),
-    removeBtns = $('.remove-item-btn'),
-    editBtns = $('.edit-item-btn'); // Sets callbacks to the buttons in the list
-
-refreshCallbacks();
-addBtn.click(function () {
-  contactList.add({
-    id: Math.floor(Math.random() * 110000),
-    name: nameField.val(),
-    age: ageField.val(),
-    city: cityField.val()
-  });
-  clearFields();
+(function () {
+  var idField = $('#room_id_field'),
+      nameField = $('#room_name_field'),
+      addBtn = $('#room_add_btn'),
+      editBtn = $('#room_edit_btn').hide(),
+      editBtns = $('.room_edit_btns'),
+      removeBtns = $('.room_remove_btns');
   refreshCallbacks();
-});
-editBtn.click(function () {
-  var item = contactList.get('id', idField.val())[0];
-  item.values({
-    id: idField.val(),
-    name: nameField.val(),
-    age: ageField.val(),
-    city: cityField.val()
+  addBtn.click(function () {
+    roomList.add({
+      id: -1,
+      name: nameField.val()
+    });
+    clearFields();
+    refreshCallbacks();
   });
-  clearFields();
-  editBtn.hide();
-  addBtn.show();
-});
+  editBtn.click(function () {
+    var item = roomList.get('id', idField.val())[0];
+    item.values({
+      id: idField.val(),
+      name: nameField.val()
+    });
+    clearFields();
+    editBtn.hide();
+    addBtn.show();
+  });
 
-function refreshCallbacks() {
-  // Needed to add new buttons to jQuery-extended object
-  removeBtns = $(removeBtns.selector);
-  editBtns = $(editBtns.selector);
-  removeBtns.click(function () {
-    var itemId = $(this).closest('tr').find('.id').text();
-    contactList.remove('id', itemId);
-  });
-  editBtns.click(function () {
-    var itemId = $(this).closest('tr').find('.id').text();
-    var itemValues = contactList.get('id', itemId)[0].values();
-    idField.val(itemValues.id);
-    nameField.val(itemValues.name);
-    ageField.val(itemValues.age);
-    cityField.val(itemValues.city);
-    editBtn.show();
-    addBtn.hide();
-  });
-}
+  function refreshCallbacks() {
+    removeBtns.click(function () {
+      var itemId = $(this).closest('tr').find('.id').text();
+      roomList.remove('id', itemId);
+    });
+    editBtns.click(function () {
+      var itemId = $(this).closest('tr').find('.id').text();
+      var itemValues = roomList.get('id', itemId)[0].values();
+      idField.val(itemValues.id);
+      nameField.val(itemValues.name);
+      editBtn.show();
+      addBtn.hide();
+    });
+  }
 
-function clearFields() {
-  nameField.val('');
-  ageField.val('');
-  cityField.val('');
-}
+  function clearFields() {
+    nameField.val('');
+  }
+})();
 
 /***/ }),
 

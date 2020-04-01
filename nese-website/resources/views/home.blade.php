@@ -51,12 +51,12 @@
                                     {{ session('status') }}
                                 </div>
                             @endif
-                            <div id="room-table">
+                            <div id="room_table">
                                 <table style="width:100%">
                                     <thead>
                                     <tr>
-                                        <th class="sort" data-sort="room-id">Raum ID</th>
-                                        <th class="sort" data-sort="room-name">Benennung</th>
+                                        <th class="sort" data-sort="id">Raum ID</th>
+                                        <th class="sort" data-sort="name">Benennung</th>
                                         <th>
                                             <input type="text" class="search" placeholder="Suchen..."/>
                                         </th>
@@ -65,17 +65,27 @@
                                     <tbody class="list">
                                     @foreach($room as $r)
                                         <tr>
-                                            <td class="room-id">{{ $r->id_room }}</td>
-                                            <td class="room-name">{{ $r->name }}</td>
-                                            <td class="room-edit">
-                                                <button class="room-edit-btns">Ändern</button>
+                                            <td class="id">{{ $r->id_room }}</td>
+                                            <td class="name">{{ $r->name }}</td>
+                                            <td class="edit">
+                                                <button class="room_edit_btns">Ändern</button>
                                             </td>
-                                            <td class="room-remove">
-                                                <button class="room-remove-btns">Löschen</button>
+                                            <td class="remove">
+                                                <button class="room_remove_btns">Löschen</button>
                                             </td>
                                         </tr>
                                     @endforeach
                                     </tbody>
+                                </table>
+                                <table>
+                                    <td class="room_name">
+                                        <input type="hidden" id="room_id_field"/>
+                                        <input type="text" id="room_name_field" placeholder="Name"/>
+                                    </td>
+                                    <td class="add">
+                                        <button id="room_add_btn">Add</button>
+                                        <button id="room_edit_btn">Edit</button>
+                                    </td>
                                 </table>
                             </div>
 
@@ -224,30 +234,6 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="id" style="display:none;">2</td>
-                    <td class="name">Jonas</td>
-                    <td class="age">-132</td>
-                    <td class="city">Berlin</td>
-                    <td class="edit">
-                        <button class="edit-item-btn">Edit</button>
-                    </td>
-                    <td class="remove">
-                        <button class="remove-item-btn">Remove</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="id" style="display:none;">3</td>
-                    <td class="name">Gustaf</td>
-                    <td class="age">-23</td>
-                    <td class="city">Sundsvall</td>
-                    <td class="edit">
-                        <button class="edit-item-btn">Edit</button>
-                    </td>
-                    <td class="remove">
-                        <button class="remove-item-btn">Remove</button>
-                    </td>
-                </tr>
-                <tr>
                     <td class="id" style="display:none;">4</td>
                     <td class="name">Fredrik</td>
                     <td class="age">26</td>
@@ -279,21 +265,4 @@
             </table>
         </div>
     </div>
-
-    <script>
-        /*var options = {
-            valueNames: ['room-id', 'room-name']
-        };
-
-        var roomList = new List('room-table', options);
-
-        var roomIdField = $('#id-field'),
-            roomNameField = $('#name-field'),
-            roomAddBtn = $('#add-btn'),
-            roomEditBtn = $('#edit-btn').hide(),
-            roomEditRowBtns = $('.room-edit-btns'),
-            roomRemoveBtns = $('.room-remove-btns');
-
-        console.log('--- end ---');*/
-    </script>
 @endsection
