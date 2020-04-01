@@ -1,9 +1,6 @@
 package swp.netsearch.restapi.util;
 
-import org.snmp4j.CommunityTarget;
-import org.snmp4j.Snmp;
-import org.snmp4j.Target;
-import org.snmp4j.TransportMapping;
+import org.snmp4j.*;
 import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.smi.*;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
@@ -105,6 +102,17 @@ public class SnmpHandler {
         TransportMapping<? extends Address> transport = new DefaultUdpTransportMapping();
         Snmp snmp = new Snmp(transport);
         transport.listen();
+        snmp.setTimeoutModel(new TimeoutModel() {
+            @Override
+            public long getRetryTimeout(int retryCount, int totalNumberOfRetries, long targetTimeout) {
+                return 0;
+            }
+
+            @Override
+            public long getRequestTimeout(int totalNumberOfRetries, long targetTimeout) {
+                return 0;
+            }
+        });
 
         TreeUtils treeUtils = new TreeUtils(snmp, new DefaultPDUFactory());
         List<TreeEvent> events = treeUtils.getSubtree(target, new OID(tableOid));

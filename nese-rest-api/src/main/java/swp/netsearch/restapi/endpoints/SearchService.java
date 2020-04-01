@@ -65,7 +65,8 @@ public class SearchService {
 
             if (connectedDevices == null) {
                 var m = new Message("error: couldn't read from switch " + sw);
-                return Response.status(Response.Status.BAD_REQUEST).entity(m.toJson()).build();
+                //return Response.status(Response.Status.BAD_REQUEST).entity(m.toJson()).build();
+                continue;
             }
 
             for (var cd : connectedDevices) {
