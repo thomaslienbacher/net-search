@@ -1,22 +1,21 @@
 // room dynamic list
-
-var roomList = new List('room_table', {
-    valueNames: ['id', 'name']
-});
+const List = require("list.js");
 
 (function () {
+    let list = new List('room_table', {
+        valueNames: ['id', 'name']
+    });
+
     let idField = $('#room_id_field'),
         nameField = $('#room_name_field'),
         addBtn = $('#room_add_btn'),
-        editBtn = $('#room_edit_btn').hide(),
-        editBtns = $('.room_edit_btns'),
-        removeBtns = $('.room_remove_btns');
+        editBtn = $('#room_edit_btn').hide();
 
     refreshCallbacks();
 
     addBtn.click(function () {
-        roomList.add({
-            id: -1,
+        list.add({
+            id: Math.round(Math.random() * 999),
             name: nameField.val(),
         });
         clearFields();
@@ -24,7 +23,7 @@ var roomList = new List('room_table', {
     });
 
     editBtn.click(function () {
-        let item = roomList.get('id', idField.val())[0];
+        let item = list.get('id', idField.val())[0];
         item.values({
             id: idField.val(),
             name: nameField.val(),
@@ -35,14 +34,17 @@ var roomList = new List('room_table', {
     });
 
     function refreshCallbacks() {
+        let editBtns = $('.room_edit_btns'),
+            removeBtns = $('.room_remove_btns');
+
         removeBtns.click(function () {
             let itemId = $(this).closest('tr').find('.id').text();
-            roomList.remove('id', itemId);
+            list.remove('id', itemId);
         });
 
         editBtns.click(function () {
             let itemId = $(this).closest('tr').find('.id').text();
-            let itemValues = roomList.get('id', itemId)[0].values();
+            let itemValues = list.get('id', itemId)[0].values();
             idField.val(itemValues.id);
             nameField.val(itemValues.name);
 

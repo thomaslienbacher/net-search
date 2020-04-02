@@ -1,24 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <div class="row justify-content-center">
-
-            <div id="table-list">
+    <div class="container-fluid">
+        <div class="row">
+            <div id="table-list" class="col-md-8 offset-md-2">
                 <div id="search-results">
                     <div class="pt-5"></div>
                     <div class="card">
-                        <div class="card-header">Liste von Räumen mit einem Gerät
-                            <input type="text" class="search" placeholder="Suchen"/>
-                            <button class="btn btn-primary" data-sort="filter"> Sortieren nach RaumNr</button>
+                        <div class="card-header">
+                            Liste von Räumen mit einem Gerät
                         </div>
                         <div class="card-body">
-                            @if (session('status'))
-                                <div class="alert alert-success" role="alert">
-                                    {{ session('status') }}
-                                </div>
-                            @endif
-
                             <table style="width:100%">
                                 <tr>
                                     <th>Raum ID</th>
@@ -46,11 +38,6 @@
                             R&auml;ume
                         </div>
                         <div class="card-body">
-                            @if (session('status'))
-                                <div class="alert alert-success" role="alert">
-                                    {{ session('status') }}
-                                </div>
-                            @endif
                             <div id="room_table">
                                 <table style="width:100%">
                                     <thead>
@@ -96,19 +83,10 @@
                 <div id="devices">
                     <div class="pt-5"></div>
                     <div class="card">
-                        <div class="card-header">Ger&auml;te
-                            <input type="text" class="search" placeholder="Suchen"/>
-                            <button type="submit" value="Submit">Löschen</button>
-                            <button type="submit" value="Submit">Hinzufügen</button>
-                            <button type="submit" value="Submit">Bearbeiten</button>
-
+                        <div class="card-header">
+                            Ger&auml;te
                         </div>
                         <div class="card-body">
-                            @if (session('status'))
-                                <div class="alert alert-success" role="alert">
-                                    {{ session('status') }}
-                                </div>
-                            @endif
                             <div>
                                 <table style="width:100%">
                                     <tr>
@@ -133,17 +111,10 @@
                 <div id="switches">
                     <div class="pt-5"></div>
                     <div class="card">
-                        <div class="card-header">Switches
-                            <button type="submit" value="Submit">Löschen</button>
-                            <button type="submit" value="Submit">Hinzufügen</button>
-                            <button type="submit" value="Submit">Bearbeiten</button>
+                        <div class="card-header">
+                            Switches
                         </div>
                         <div class="card-body">
-                            @if (session('status'))
-                                <div class="alert alert-success" role="alert">
-                                    {{ session('status') }}
-                                </div>
-                            @endif
                             <div>
                                 <table style="width:100%">
                                     <tr>
@@ -170,10 +141,8 @@
                 <div id="portconnections">
                     <div class="pt-5"></div>
                     <div class="card">
-                        <div class="card-header">Port Connections
-                            <button type="submit" value="Submit">Löschen</button>
-                            <button type="submit" value="Submit">Hinzufügen</button>
-                            <button type="submit" value="Submit">Bearbeiten</button>
+                        <div class="card-header">
+                            Port Connections
                         </div>
                         <div class="card-body">
                             @if (session('status'))
@@ -204,65 +173,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div class="test">
-        <div id="contacts">
-            <table>
-                <thead>
-                <tr>
-                    <th class="sort" data-sort="name">Name</th>
-                    <th class="sort" data-sort="age">Age</th>
-                    <th class="sort" data-sort="city">City</th>
-                    <th colspan="2">
-                        <input type="text" class="search" placeholder="Search contact"/>
-                    </th>
-                </tr>
-                </thead>
-                <tbody class="list">
-                <tr>
-                    <td class="id" style="display:none;">1</td>
-                    <td class="name">Jonny</td>
-                    <td class="age">27</td>
-                    <td class="city">Stockholm</td>
-                    <td class="edit">
-                        <button class="edit-item-btn">Edit</button>
-                    </td>
-                    <td class="remove">
-                        <button class="remove-item-btn">Remove</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="id" style="display:none;">4</td>
-                    <td class="name">Fredrik</td>
-                    <td class="age">26</td>
-                    <td class="city">Goteborg</td>
-                    <td class="edit">
-                        <button class="edit-item-btn">Edit</button>
-                    </td>
-                    <td class="remove">
-                        <button class="remove-item-btn">Remove</button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-            <table>
-                <td class="name">
-                    <input type="hidden" id="id-field"/>
-                    <input type="text" id="name-field" placeholder="Name"/>
-                </td>
-                <td class="age">
-                    <input type="text" id="age-field" placeholder="Age"/>
-                </td>
-                <td class="city">
-                    <input type="text" id="city-field" placeholder="City"/>
-                </td>
-                <td class="add">
-                    <button id="add-btn">Add</button>
-                    <button id="edit-btn">Edit</button>
-                </td>
-            </table>
         </div>
     </div>
 @endsection
