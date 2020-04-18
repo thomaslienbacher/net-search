@@ -1,8 +1,43 @@
 // room dynamic list
 const List = require("list.js");
+const axios = require("axios").default;
+
+axios.interceptors.request.use(request => {
+    console.log('Starting Request', request)
+    return request
+});
+
+axios.get('http://local.tom:8100/nese_rest_api_war/api/rooms', {
+    /*headers: {
+        'API_TOKEN': 'thomas',
+    }*/
+}).then(function (response) {
+    console.log(response.data);
+    console.log(response.status);
+    console.log(response.statusText);
+    console.log(response.headers);
+    console.log(response.config);
+}).catch(function (error) {
+    console.log(error);
+});
+
+axios.get('http://local.tom:8100/nese_rest_api_war/api/rooms', {
+    headers: {
+        'API_TOKEN': 'thomas',
+    }
+}).then(function (response) {
+    console.log(response.data);
+    console.log(response.status);
+    console.log(response.statusText);
+    console.log(response.headers);
+    console.log(response.config);
+}).catch(function (error) {
+    console.log(error);
+});
+
 
 (function () {
-    let list = new List('room_table', {
+    let list = new List('room_table', { //underscores because of JSON
         valueNames: ['id', 'name']
     });
 
@@ -16,7 +51,7 @@ const List = require("list.js");
 
     addBtn.click(function () {
         list.add({
-            id: Math.round(Math.random() * 999),
+            id: Math.round(Math.random() * 999), //temporary id
             name: nameField.val(),
         });
         clearFields();

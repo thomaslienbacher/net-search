@@ -5,6 +5,7 @@ import swp.netsearch.restapi.util.Message;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
+import javax.ws.rs.container.PreMatching;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
@@ -18,6 +19,7 @@ import java.util.List;
  * from https://howtodoinjava.com/jersey/jersey-rest-security/
  */
 @Provider
+@PreMatching
 public class AuthenticationFilter implements ContainerRequestFilter {
 
     private static final String AUTHORIZATION_KEY = "API_TOKEN";
