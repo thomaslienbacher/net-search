@@ -1,40 +1,10 @@
-// room dynamic list
 const List = require("list.js");
 const axios = require("axios").default;
 
 axios.interceptors.request.use(request => {
-    console.log('Starting Request', request)
+    console.log('Starting Request', request);
     return request
 });
-
-axios.get('http://local.tom:8100/nese_rest_api_war/api/rooms', {
-    /*headers: {
-        'API_TOKEN': 'thomas',
-    }*/
-}).then(function (response) {
-    console.log(response.data);
-    console.log(response.status);
-    console.log(response.statusText);
-    console.log(response.headers);
-    console.log(response.config);
-}).catch(function (error) {
-    console.log(error);
-});
-
-axios.get('http://local.tom:8100/nese_rest_api_war/api/rooms', {
-    headers: {
-        'API_TOKEN': 'thomas',
-    }
-}).then(function (response) {
-    console.log(response.data);
-    console.log(response.status);
-    console.log(response.statusText);
-    console.log(response.headers);
-    console.log(response.config);
-}).catch(function (error) {
-    console.log(error);
-});
-
 
 (function () {
     let list = new List('room_table', { //underscores because of JSON
@@ -50,20 +20,43 @@ axios.get('http://local.tom:8100/nese_rest_api_war/api/rooms', {
     refreshCallbacks();
 
     addBtn.click(function () {
-        list.add({
-            id: Math.round(Math.random() * 999), //temporary id
-            name: nameField.val(),
+        axios.post(`http://local.tom:8100/nese_rest_api_war/api/rooms?name=${nameField.val()}`, {},
+            {
+                headers: {
+                    'API_TOKEN': process.env.MIX_API_TOKEN
+                }
+            }).then(function (response) {
+            list.add({
+                id: response.data.id_room,
+                name: response.data.name
+            });
+        }).catch(function (error) {
+            console.log(error);
         });
+
         clearFields();
         refreshCallbacks();
     });
 
     editBtn.click(function () {
         let item = list.get('id', idField.val())[0];
-        item.values({
-            id: idField.val(),
-            name: nameField.val(),
+        let id = idField.val();
+        let name = nameField.val();
+
+        axios.put(`http://local.tom:8100/nese_rest_api_war/api/rooms/?id=${id}&name=${name}`, {},
+            {
+                headers: {
+                    'API_TOKEN': process.env.MIX_API_TOKEN
+                }
+            }).then(function (response) {
+            item.values({
+                id: id,
+                name: name,
+            });
+        }).catch(function (error) {
+            console.log(error);
         });
+
         clearFields();
         editBtn.hide();
         addBtn.show();
@@ -75,7 +68,17 @@ axios.get('http://local.tom:8100/nese_rest_api_war/api/rooms', {
 
         removeBtns.click(function () {
             let itemId = $(this).closest('tr').find('.id').text();
-            list.remove('id', itemId);
+
+            axios.delete(`http://local.tom:8100/nese_rest_api_war/api/rooms/${itemId}`,
+                {
+                    headers: {
+                        'API_TOKEN': process.env.MIX_API_TOKEN
+                    }
+                }).then(function (response) {
+                list.remove('id', itemId);
+            }).catch(function (error) {
+                console.log(error);
+            });
         });
 
         editBtns.click(function () {

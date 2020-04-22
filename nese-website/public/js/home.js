@@ -3900,7 +3900,6 @@ module.exports = naturalCompare;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-// room dynamic list
 var List = __webpack_require__(/*! list.js */ "./node_modules/list.js/src/index.js");
 
 var axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js")["default"];
@@ -3908,32 +3907,6 @@ var axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js")["d
 axios.interceptors.request.use(function (request) {
   console.log('Starting Request', request);
   return request;
-});
-axios.get('http://local.tom:8100/nese_rest_api_war/api/rooms', {
-  /*headers: {
-      'API_TOKEN': 'thomas',
-  }*/
-}).then(function (response) {
-  console.log(response.data);
-  console.log(response.status);
-  console.log(response.statusText);
-  console.log(response.headers);
-  console.log(response.config);
-})["catch"](function (error) {
-  console.log(error);
-});
-axios.get('http://local.tom:8100/nese_rest_api_war/api/rooms', {
-  headers: {
-    'API_TOKEN': 'thomas'
-  }
-}).then(function (response) {
-  console.log(response.data);
-  console.log(response.status);
-  console.log(response.statusText);
-  console.log(response.headers);
-  console.log(response.config);
-})["catch"](function (error) {
-  console.log(error);
 });
 
 (function () {
@@ -3947,19 +3920,36 @@ axios.get('http://local.tom:8100/nese_rest_api_war/api/rooms', {
       editBtn = $('#room_edit_btn').hide();
   refreshCallbacks();
   addBtn.click(function () {
-    list.add({
-      id: Math.round(Math.random() * 999),
-      //temporary id
-      name: nameField.val()
+    axios.post("http://local.tom:8100/nese_rest_api_war/api/rooms?name=".concat(nameField.val()), {}, {
+      headers: {
+        'API_TOKEN': "thomas"
+      }
+    }).then(function (response) {
+      list.add({
+        id: response.data.id_room,
+        name: response.data.name
+      });
+    })["catch"](function (error) {
+      console.log(error);
     });
     clearFields();
     refreshCallbacks();
   });
   editBtn.click(function () {
     var item = list.get('id', idField.val())[0];
-    item.values({
-      id: idField.val(),
-      name: nameField.val()
+    var id = idField.val();
+    var name = nameField.val();
+    axios.put("http://local.tom:8100/nese_rest_api_war/api/rooms/?id=".concat(id, "&name=").concat(name), {}, {
+      headers: {
+        'API_TOKEN': "thomas"
+      }
+    }).then(function (response) {
+      item.values({
+        id: id,
+        name: name
+      });
+    })["catch"](function (error) {
+      console.log(error);
     });
     clearFields();
     editBtn.hide();
@@ -3971,7 +3961,15 @@ axios.get('http://local.tom:8100/nese_rest_api_war/api/rooms', {
         removeBtns = $('.room_remove_btns');
     removeBtns.click(function () {
       var itemId = $(this).closest('tr').find('.id').text();
-      list.remove('id', itemId);
+      axios["delete"]("http://local.tom:8100/nese_rest_api_war/api/rooms/".concat(itemId), {
+        headers: {
+          'API_TOKEN': "thomas"
+        }
+      }).then(function (response) {
+        list.remove('id', itemId);
+      })["catch"](function (error) {
+        console.log(error);
+      });
     });
     editBtns.click(function () {
       var itemId = $(this).closest('tr').find('.id').text();
