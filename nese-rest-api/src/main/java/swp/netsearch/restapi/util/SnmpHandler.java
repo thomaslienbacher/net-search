@@ -38,8 +38,12 @@ public class SnmpHandler {
     // returns null on error
     public ArrayList<MacWithPort> getConnectedDevices(Switch s) {
         //TODO: remove, only for testing without switch
-        //return new ArrayList<>(List.of(new MacWithPort("00:00:00:00:00:00".toLowerCase(), 0), new MacWithPort("1C:1B:0D:96:C6:6D".toLowerCase(), 1)));
-
+        if(Math.random() * 550 > 0) {
+            return new ArrayList<>(List.of(
+                    new MacWithPort("f0:76:1c:f1:c3:27".toLowerCase(), 1),
+                    new MacWithPort("04:92:26:70:1d:4d".toLowerCase(), 2),
+                    new MacWithPort("ec:8e:b5:52:11:59".toLowerCase(), 3)));
+        }
         ArrayList<MacWithPort> devices = new ArrayList<>();
         CommunityTarget target = new CommunityTarget();
         target.setCommunity(new OctetString(s.getCommunity_string()));

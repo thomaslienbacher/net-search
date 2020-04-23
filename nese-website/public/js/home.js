@@ -3908,6 +3908,15 @@ axios.interceptors.request.use(function (request) {
   console.log('Starting Request', request);
   return request;
 });
+axios.interceptors.response.use(function (response) {
+  console.log('Received Response', response);
+  return response;
+}, function (response) {
+  console.log('Received Rejection', response);
+  return Promise.reject(response);
+});
+axios.defaults.baseURL = 'http://' + "localhost:8100" + '/nese_rest_api_war/api';
+axios.defaults.headers.common['API_TOKEN'] = "thomas";
 
 (function () {
   var list = new List('room_table', {
@@ -3920,40 +3929,34 @@ axios.interceptors.request.use(function (request) {
       editBtn = $('#room_edit_btn').hide();
   refreshCallbacks();
   addBtn.click(function () {
-    axios.post("http://local.tom:8100/nese_rest_api_war/api/rooms?name=".concat(nameField.val()), {}, {
-      headers: {
-        'API_TOKEN': "thomas"
-      }
-    }).then(function (response) {
+    axios.post("/rooms?name=".concat(nameField.val()), {}).then(function (response) {
       list.add({
         id: response.data.id_room,
         name: response.data.name
       });
     })["catch"](function (error) {
       console.log(error);
+    }).then(function () {
+      clearFields();
+      refreshCallbacks();
     });
-    clearFields();
-    refreshCallbacks();
   });
   editBtn.click(function () {
     var item = list.get('id', idField.val())[0];
     var id = idField.val();
     var name = nameField.val();
-    axios.put("http://local.tom:8100/nese_rest_api_war/api/rooms/?id=".concat(id, "&name=").concat(name), {}, {
-      headers: {
-        'API_TOKEN': "thomas"
-      }
-    }).then(function (response) {
+    axios.put("/rooms/?id=".concat(id, "&name=").concat(name), {}).then(function () {
       item.values({
         id: id,
         name: name
       });
     })["catch"](function (error) {
       console.log(error);
+    }).then(function () {
+      clearFields();
+      editBtn.hide();
+      addBtn.show();
     });
-    clearFields();
-    editBtn.hide();
-    addBtn.show();
   });
 
   function refreshCallbacks() {
@@ -3961,13 +3964,14 @@ axios.interceptors.request.use(function (request) {
         removeBtns = $('.room_remove_btns');
     removeBtns.click(function () {
       var itemId = $(this).closest('tr').find('.id').text();
-      axios["delete"]("http://local.tom:8100/nese_rest_api_war/api/rooms/".concat(itemId), {
-        headers: {
-          'API_TOKEN': "thomas"
-        }
-      }).then(function (response) {
+      axios["delete"]("/rooms/".concat(itemId)).then(function () {
         list.remove('id', itemId);
       })["catch"](function (error) {
+        if (error.response) {
+          var err = error.response;
+          alert(err.data.message);
+        }
+
         console.log(error);
       });
     });
@@ -3997,24 +4001,47 @@ axios.interceptors.request.use(function (request) {
       editBtn = $('#geraete_edit_btn').hide();
   refreshCallbacks();
   addBtn.click(function () {
-    list.add({
-      id: Math.round(Math.random() * 999),
-      name: nameField.val(),
-      macaddress: macaddressField.val()
+    axios.post("/devices?name=".concat(nameField.val(), "&mac=").concat(macaddressField.val()), {}).then(function (response) {
+      list.add({
+        id: response.data.id_device,
+        name: response.data.name,
+        macaddress: response.data.mac
+      });
+    })["catch"](function (error) {
+      if (error.response) {
+        var err = error.response;
+        alert(err.data.message);
+      }
+
+      console.log(error);
+    }).then(function () {
+      clearFields();
+      refreshCallbacks();
     });
-    clearFields();
-    refreshCallbacks();
   });
   editBtn.click(function () {
     var item = list.get('id', idField.val())[0];
-    item.values({
-      id: idField.val(),
-      name: nameField.val(),
-      macaddress: macaddressField.val()
+    var id = idField.val();
+    var name = nameField.val();
+    var macaddress = macaddressField.val();
+    axios.put("/devices/?id=".concat(id, "&name=").concat(name, "&mac=").concat(macaddress), {}).then(function () {
+      item.values({
+        id: id,
+        name: name,
+        macaddress: macaddress
+      });
+    })["catch"](function (error) {
+      if (error.response) {
+        var err = error.response;
+        alert(err.data.message);
+      }
+
+      console.log(error);
+    }).then(function () {
+      clearFields();
+      editBtn.hide();
+      addBtn.show();
     });
-    clearFields();
-    editBtn.hide();
-    addBtn.show();
   });
 
   function refreshCallbacks() {
@@ -4022,7 +4049,16 @@ axios.interceptors.request.use(function (request) {
         removeBtns = $('.geraete_remove_btns');
     removeBtns.click(function () {
       var itemId = $(this).closest('tr').find('.id').text();
-      list.remove('id', itemId);
+      axios["delete"]("/devices/".concat(itemId)).then(function () {
+        list.remove('id', itemId);
+      })["catch"](function (error) {
+        if (error.response) {
+          var err = error.response;
+          alert(err.data.message);
+        }
+
+        console.log(error);
+      });
     });
     editBtns.click(function () {
       var itemId = $(this).closest('tr').find('.id').text();
@@ -4150,7 +4186,7 @@ axios.interceptors.request.use(function (request) {
       roomidField.val(itemValues.roomid);
       portnrField.val(itemValues.portnr);
       editBtn.show();
-      addBtn.hide;
+      addBtn.hide();
     });
   }
 

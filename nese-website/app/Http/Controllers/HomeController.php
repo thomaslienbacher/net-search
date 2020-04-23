@@ -30,11 +30,11 @@ class HomeController extends Controller
         ];
 
         $client = new Client();
-        $res = $client->get('http://localhost:8100/nese_rest_api_war/api/search', $options);
-        $switches = $client->get('http://localhost:8100/nese_rest_api_war/api/switches', $options);
-        $rooms = $client->get('http://localhost:8100/nese_rest_api_war/api/rooms', $options);
-        $devices = $client->get('http://localhost:8100/nese_rest_api_war/api/devices', $options);
-        $connections = $client->get('http://localhost:8100/nese_rest_api_war/api/portconnections', $options);
+        $res = $client->get('http://' . env('API_HOST') . '/nese_rest_api_war/api/search', $options);
+        $switches = $client->get('http://' . env('API_HOST') . '/nese_rest_api_war/api/switches', $options);
+        $rooms = $client->get('http://' . env('API_HOST') . '/nese_rest_api_war/api/rooms', $options);
+        $devices = $client->get('http://' . env('API_HOST') . '/nese_rest_api_war/api/devices', $options);
+        $connections = $client->get('http://' . env('API_HOST') . '/nese_rest_api_war/api/portconnections', $options);
 
         return view('home', ['search' => json_decode($res->getBody()),
             'switch' => json_decode($switches->getBody()),

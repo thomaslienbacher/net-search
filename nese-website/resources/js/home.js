@@ -3,8 +3,19 @@ const axios = require("axios").default;
 
 axios.interceptors.request.use(request => {
     console.log('Starting Request', request);
-    return request
+    return request;
 });
+
+axios.interceptors.response.use(response => {
+    console.log('Received Response', response);
+    return response;
+}, response => {
+    console.log('Received Rejection', response);
+    return Promise.reject(response);
+});
+
+axios.defaults.baseURL = 'http://' + process.env.MIX_API_HOST + '/nese_rest_api_war/api';
+axios.defaults.headers.common['API_TOKEN'] = process.env.MIX_API_TOKEN;
 
 (function () {
     let list = new List('room_table', { //underscores because of JSON
@@ -16,26 +27,21 @@ axios.interceptors.request.use(request => {
         addBtn = $('#room_add_btn'),
         editBtn = $('#room_edit_btn').hide();
 
-
     refreshCallbacks();
 
     addBtn.click(function () {
-        axios.post(`http://local.tom:8100/nese_rest_api_war/api/rooms?name=${nameField.val()}`, {},
-            {
-                headers: {
-                    'API_TOKEN': process.env.MIX_API_TOKEN
-                }
-            }).then(function (response) {
-            list.add({
-                id: response.data.id_room,
-                name: response.data.name
-            });
-        }).catch(function (error) {
+        axios.post(`/rooms?name=${nameField.val()}`, {})
+            .then(function (response) {
+                list.add({
+                    id: response.data.id_room,
+                    name: response.data.name
+                });
+            }).catch(function (error) {
             console.log(error);
+        }).then(function () {
+            clearFields();
+            refreshCallbacks();
         });
-
-        clearFields();
-        refreshCallbacks();
     });
 
     editBtn.click(function () {
@@ -43,23 +49,19 @@ axios.interceptors.request.use(request => {
         let id = idField.val();
         let name = nameField.val();
 
-        axios.put(`http://local.tom:8100/nese_rest_api_war/api/rooms/?id=${id}&name=${name}`, {},
-            {
-                headers: {
-                    'API_TOKEN': process.env.MIX_API_TOKEN
-                }
-            }).then(function (response) {
-            item.values({
-                id: id,
-                name: name,
-            });
-        }).catch(function (error) {
+        axios.put(`/rooms/?id=${id}&name=${name}`, {})
+            .then(function () {
+                item.values({
+                    id: id,
+                    name: name,
+                });
+            }).catch(function (error) {
             console.log(error);
+        }).then(function () {
+            clearFields();
+            editBtn.hide();
+            addBtn.show();
         });
-
-        clearFields();
-        editBtn.hide();
-        addBtn.show();
     });
 
     function refreshCallbacks() {
@@ -69,14 +71,14 @@ axios.interceptors.request.use(request => {
         removeBtns.click(function () {
             let itemId = $(this).closest('tr').find('.id').text();
 
-            axios.delete(`http://local.tom:8100/nese_rest_api_war/api/rooms/${itemId}`,
-                {
-                    headers: {
-                        'API_TOKEN': process.env.MIX_API_TOKEN
-                    }
-                }).then(function (response) {
-                list.remove('id', itemId);
-            }).catch(function (error) {
+            axios.delete(`/rooms/${itemId}`)
+                .then(function () {
+                    list.remove('id', itemId);
+                }).catch(function (error) {
+                if (error.response) {
+                    let err = error.response;
+                    alert(err.data.message);
+                }
                 console.log(error);
             });
         });
@@ -113,25 +115,49 @@ axios.interceptors.request.use(request => {
     refreshCallbacks();
 
     addBtn.click(function () {
-        list.add({
-            id: Math.round(Math.random() * 999),
-            name: nameField.val(),
-            macaddress: macaddressField.val(),
+        axios.post(`/devices?name=${nameField.val()}&mac=${macaddressField.val()}`, {})
+            .then(function (response) {
+                list.add({
+                    id: response.data.id_device,
+                    name: response.data.name,
+                    macaddress: response.data.mac,
+                });
+            }).catch(function (error) {
+            if (error.response) {
+                let err = error.response;
+                alert(err.data.message);
+            }
+            console.log(error);
+        }).then(function () {
+            clearFields();
+            refreshCallbacks();
         });
-        clearFields();
-        refreshCallbacks();
     });
 
     editBtn.click(function () {
         let item = list.get('id', idField.val())[0];
-        item.values({
-            id: idField.val(),
-            name: nameField.val(),
-            macaddress: macaddressField.val(),
+        let id = idField.val();
+        let name = nameField.val();
+        let macaddress = macaddressField.val();
+
+        axios.put(`/devices/?id=${id}&name=${name}&mac=${macaddress}`, {})
+            .then(function () {
+                item.values({
+                    id: id,
+                    name: name,
+                    macaddress: macaddress,
+                });
+            }).catch(function (error) {
+            if (error.response) {
+                let err = error.response;
+                alert(err.data.message);
+            }
+            console.log(error);
+        }).then(function () {
+            clearFields();
+            editBtn.hide();
+            addBtn.show();
         });
-        clearFields();
-        editBtn.hide();
-        addBtn.show();
     });
 
     function refreshCallbacks() {
@@ -140,7 +166,16 @@ axios.interceptors.request.use(request => {
 
         removeBtns.click(function () {
             let itemId = $(this).closest('tr').find('.id').text();
-            list.remove('id', itemId);
+            axios.delete(`/devices/${itemId}`)
+                .then(function () {
+                    list.remove('id', itemId);
+                }).catch(function (error) {
+                if (error.response) {
+                    let err = error.response;
+                    alert(err.data.message);
+                }
+                console.log(error);
+            });
         });
 
         editBtns.click(function () {
@@ -287,7 +322,7 @@ axios.interceptors.request.use(request => {
             portnrField.val(itemValues.portnr);
 
             editBtn.show();
-            addBtn.hide
+            addBtn.hide()
         });
     }
 
@@ -302,5 +337,4 @@ axios.interceptors.request.use(request => {
     let list = new List('list_table', {
         valueNames: ['id', 'name', 'macadress']
     });
-
 })();
