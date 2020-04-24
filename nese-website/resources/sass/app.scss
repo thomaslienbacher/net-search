@@ -6,3 +6,41 @@
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+
+
+button {
+    background-color: white;
+    color: black;
+    border: 2px solid #262626;
+    cursor: pointer;
+    display: inline-block;
+}
+
+button:hover {
+    background-color: cornflowerblue
+}
+
+button:active {
+    background-color: cornflowerblue;
+    transform: translateY(2px);
+    cursor: pointer;
+    text-decoration: none;
+    outline: none;
+}
+
+button:focus {
+    outline: 0;
+}
+
+input[type=text] {
+    box-size: border-box;
+    border-radius: 4px;
+    background-color: white;
+    color: black;
+    border: 2px solid #262626;
+    cursor: pointer;
+}
+
+input:focus {
+    outline: 0;
+}
