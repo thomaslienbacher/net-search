@@ -213,27 +213,53 @@ axios.defaults.headers.common['API_TOKEN'] = process.env.MIX_API_TOKEN;
     refreshCallbacks();
 
     addBtn.click(function () {
-        list.add({
-            id: Math.round(Math.random() * 999),
-            name: nameField.val(),
-            ipaddress: ipaddressField.val(),
-            communitystring: communitystringField.val(),
+        axios.post(`switches?name=${nameField.val()}`, {})
+            .then(function(response) {
+                list.add({
+                    id: response.data.id_devices,
+                    name: response.data.name,
+                    ipaddress: response.data.ipaddress,
+                    communitystring: response.data.communitystring
+                });
+            }).catch(function (error) {
+        if (error.response) {
+            let err = error.response;
+            alert(err.data.message);
+        }
+
+            console.log(error);
+            }).then(function () {
+                clearFields();
+                refreshCallbacks();
+            });
         });
-        clearFields();
-        refreshCallbacks();
-    });
 
     editBtn.click(function () {
         let item = list.get('id', idField.val())[0];
-        item.values({
-            id: idField.val(),
-            name: nameField.val(),
-            ipaddress: ipaddressField.val(),
-            communitystring: communitystringField.val(),
+        let id = idField.val();
+        let name = nameField.val();
+        let ipaddress = ipaddressField.val();
+        let communitystring = communitystringField.val();
+
+        axios.put(`/devices/?id=${id}&name=${name}&ipaddress=${ipaddress}&communitystring=${communitystring}`, {})
+            .then(function() {
+                item.values({
+                    id: id,
+                    name: name,
+                    ipaddress: ipaddress,
+                    communitystring: communitystring,
+                });
+            }).catch(function (error) {
+                if(error.respone){
+                    let err = error.respone;
+                    alert(err.data.message);
+                }
+                console.log(error);
+        }).then(function () {
+            clearFields();
+            editBtn.hide();
+            addBtn.show();
         });
-        clearFields();
-        editBtn.hide();
-        addBtn.show();
     });
 
     function refreshCallbacks() {
@@ -242,7 +268,17 @@ axios.defaults.headers.common['API_TOKEN'] = process.env.MIX_API_TOKEN;
 
         removeBtns.click(function () {
             let itemId = $(this).closest('tr').find('.id').text();
-            list.remove('id', itemId);
+
+            axios.delete(`/switches/${itemId}`)
+                .then(function(){
+                    list.remove(`id`, itemId);
+                }).catch(function (error) {
+                    if(error.response) {
+                        let err = error.response;
+                        alert(err.data.message);
+                    }
+                    console.log(error);
+            });
         });
 
         editBtns.click(function () {
@@ -281,27 +317,54 @@ axios.defaults.headers.common['API_TOKEN'] = process.env.MIX_API_TOKEN;
     refreshCallbacks();
 
     addBtn.click(function () {
-        list.add({
-            id: Math.round(Math.random() * 999),
-            switchid: switchidField.val(),
-            roomid: roomidField.val(),
-            portnr: portnrField.val(),
+        axios.post(`/portconnections?name=${switchidField.val()}`, {})
+            .then(function (response) {
+                list.add({
+                    id: response.data.id_switches,
+                    switchid: response.data.switch_id,
+                    roomid: response.data.room_id,
+                    portnr: response.data.port
+                });
+            }).catch(function (error) {
+            if (error.response) {
+                let err = error.response;
+                alert(err.data.message);
+            }
+
+            console.log(error);
+        }).then(function () {
+            clearFields();
+            refreshCallbacks()
         });
-        clearFields();
-        refreshCallbacks();
     });
 
     editBtn.click(function () {
         let item = list.get('id', idField.val())[0];
-        item.values({
-            id: idField.val(),
-            switchid: switchidField.val(),
-            roomid: roomidField.val(),
-            portnr: portnrField.val(),
+        let id = idField.val();
+        let switchid = switchidField.val();
+        let roomid = roomidField.val();
+        let portnr = portnrField.val();
+
+        axios.put(`/portconnections/?id=${id}&switchid=${switchid}&roomid=${roomid}&portnr=${portnr}`, {})
+            .then(function(){
+                item.values({
+                    id: id,
+                    switchid: switchid,
+                    roomid: roomid,
+                    portnr: portnr,
+                });
+            }).catch(function(error){
+                if(error.response){
+                    let err = error.response;
+                    alert(err.data.message);
+                }
+
+                console.log(error);
+        });then(function (){
+            clearFields();
+            editBtn.hide();
+            addBtn.show();
         });
-        clearFields();
-        editBtn.hide();
-        addBtn.show();
     });
 
     function refreshCallbacks() {
@@ -310,7 +373,17 @@ axios.defaults.headers.common['API_TOKEN'] = process.env.MIX_API_TOKEN;
 
         removeBtns.click(function () {
             let itemId = $(this).closest('tr').find('.id').text();
-            list.remove('id', itemId);
+
+            axios.delete(`/portconnections/${itemId}`)
+                .then(function(){
+                    list.remove('id', itemId);
+                }).catch(function(error){
+                    if(error.response){
+                        let err = error.response;
+                        alert(err.data.message);
+                    }
+                    console.log(error);
+            });
         });
 
         editBtns.click(function () {

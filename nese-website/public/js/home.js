@@ -4089,26 +4089,50 @@ axios.defaults.headers.common['API_TOKEN'] = "thomas";
       editBtn = $('#switch_edit_btn').hide();
   refreshCallbacks();
   addBtn.click(function () {
-    list.add({
-      id: Math.round(Math.random() * 999),
-      name: nameField.val(),
-      ipaddress: ipaddressField.val(),
-      communitystring: communitystringField.val()
+    axios.post("switches?name=".concat(nameField.val()), {}).then(function (response) {
+      list.add({
+        id: response.data.id_devices,
+        name: response.data.name,
+        ipaddress: response.data.ipaddress,
+        communitystring: response.data.communitystring
+      });
+    })["catch"](function (error) {
+      if (error.response) {
+        var err = error.response;
+        alert(err.data.message);
+      }
+
+      console.log(error);
+    }).then(function () {
+      clearFields();
+      refreshCallbacks();
     });
-    clearFields();
-    refreshCallbacks();
   });
   editBtn.click(function () {
     var item = list.get('id', idField.val())[0];
-    item.values({
-      id: idField.val(),
-      name: nameField.val(),
-      ipaddress: ipaddressField.val(),
-      communitystring: communitystringField.val()
+    var id = idField.val();
+    var name = nameField.val();
+    var ipaddress = ipaddressField.val();
+    var communitystring = communitystringField.val();
+    axios.put("/devices/?id=".concat(id, "&name=").concat(name, "&ipaddress=").concat(ipaddress, "&communitystring=").concat(communitystring), {}).then(function () {
+      item.values({
+        id: id,
+        name: name,
+        ipaddress: ipaddress,
+        communitystring: communitystring
+      });
+    })["catch"](function (error) {
+      if (error.respone) {
+        var err = error.respone;
+        alert(err.data.message);
+      }
+
+      console.log(error);
+    }).then(function () {
+      clearFields();
+      editBtn.hide();
+      addBtn.show();
     });
-    clearFields();
-    editBtn.hide();
-    addBtn.show();
   });
 
   function refreshCallbacks() {
@@ -4116,7 +4140,16 @@ axios.defaults.headers.common['API_TOKEN'] = "thomas";
         removeBtns = $('.switch_remove_btns');
     removeBtns.click(function () {
       var itemId = $(this).closest('tr').find('.id').text();
-      list.remove('id', itemId);
+      axios["delete"]("/switches/".concat(itemId)).then(function () {
+        list.remove("id", itemId);
+      })["catch"](function (error) {
+        if (error.response) {
+          var err = error.response;
+          alert(err.data.message);
+        }
+
+        console.log(error);
+      });
     });
     editBtns.click(function () {
       var itemId = $(this).closest('tr').find('.id').text();
@@ -4149,26 +4182,51 @@ axios.defaults.headers.common['API_TOKEN'] = "thomas";
       editBtn = $('#port_edit_btn').hide();
   refreshCallbacks();
   addBtn.click(function () {
-    list.add({
-      id: Math.round(Math.random() * 999),
-      switchid: switchidField.val(),
-      roomid: roomidField.val(),
-      portnr: portnrField.val()
+    axios.post("/portconnections?name=".concat(switchidField.val()), {}).then(function (response) {
+      list.add({
+        id: response.data.id_switches,
+        switchid: response.data.switch_id,
+        roomid: response.data.room_id,
+        portnr: response.data.port
+      });
+    })["catch"](function (error) {
+      if (error.response) {
+        var err = error.response;
+        alert(err.data.message);
+      }
+
+      console.log(error);
+    }).then(function () {
+      clearFields();
+      refreshCallbacks();
     });
-    clearFields();
-    refreshCallbacks();
   });
   editBtn.click(function () {
     var item = list.get('id', idField.val())[0];
-    item.values({
-      id: idField.val(),
-      switchid: switchidField.val(),
-      roomid: roomidField.val(),
-      portnr: portnrField.val()
+    var id = idField.val();
+    var switchid = switchidField.val();
+    var roomid = roomidField.val();
+    var portnr = portnrField.val();
+    axios.put("/portconnections/?id=".concat(id, "&switchid=").concat(switchid, "&roomid=").concat(roomid, "&portnr=").concat(portnr), {}).then(function () {
+      item.values({
+        id: id,
+        switchid: switchid,
+        roomid: roomid,
+        portnr: portnr
+      });
+    })["catch"](function (error) {
+      if (error.response) {
+        var err = error.response;
+        alert(err.data.message);
+      }
+
+      console.log(error);
     });
-    clearFields();
-    editBtn.hide();
-    addBtn.show();
+    then(function () {
+      clearFields();
+      editBtn.hide();
+      addBtn.show();
+    });
   });
 
   function refreshCallbacks() {
@@ -4176,7 +4234,16 @@ axios.defaults.headers.common['API_TOKEN'] = "thomas";
         removeBtns = $('.port_remove_btns');
     removeBtns.click(function () {
       var itemId = $(this).closest('tr').find('.id').text();
-      list.remove('id', itemId);
+      axios["delete"]("/portconnections/".concat(itemId)).then(function () {
+        list.remove('id', itemId);
+      })["catch"](function (error) {
+        if (error.response) {
+          var err = error.response;
+          alert(err.data.message);
+        }
+
+        console.log(error);
+      });
     });
     editBtns.click(function () {
       var itemId = $(this).closest('tr').find('.id').text();
@@ -4212,7 +4279,7 @@ axios.defaults.headers.common['API_TOKEN'] = "thomas";
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Eigene Dateien\HTL\5. Jahr\SWP-Projekt\net-search\nese-website\resources\js\home.js */"./resources/js/home.js");
+module.exports = __webpack_require__(/*! D:\Schule\5AHWII\SWP\Net-Search\net-search\nese-website\resources\js\home.js */"./resources/js/home.js");
 
 
 /***/ })
