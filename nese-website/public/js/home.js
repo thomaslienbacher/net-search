@@ -4089,12 +4089,12 @@ axios.defaults.headers.common['API_TOKEN'] = "thomas";
       editBtn = $('#switch_edit_btn').hide();
   refreshCallbacks();
   addBtn.click(function () {
-    axios.post("switches?name=".concat(nameField.val()), {}).then(function (response) {
+    axios.post("/switches?name=".concat(nameField.val(), "&ip=").concat(ipaddressField.val(), "&community_string=").concat(communitystringField.val()), {}).then(function (response) {
       list.add({
-        id: response.data.id_devices,
+        id: response.data.id_switch,
         name: response.data.name,
-        ipaddress: response.data.ipaddress,
-        communitystring: response.data.communitystring
+        ipaddress: response.data.ip,
+        communitystring: response.data.community_string
       });
     })["catch"](function (error) {
       if (error.response) {
@@ -4114,7 +4114,7 @@ axios.defaults.headers.common['API_TOKEN'] = "thomas";
     var name = nameField.val();
     var ipaddress = ipaddressField.val();
     var communitystring = communitystringField.val();
-    axios.put("/devices/?id=".concat(id, "&name=").concat(name, "&ipaddress=").concat(ipaddress, "&communitystring=").concat(communitystring), {}).then(function () {
+    axios.put("/switches?id=".concat(id, "&name=").concat(name, "&ip=").concat(ipaddress, "&community_string=").concat(communitystring), {}).then(function () {
       item.values({
         id: id,
         name: name,
@@ -4122,8 +4122,8 @@ axios.defaults.headers.common['API_TOKEN'] = "thomas";
         communitystring: communitystring
       });
     })["catch"](function (error) {
-      if (error.respone) {
-        var err = error.respone;
+      if (error.response) {
+        var err = error.response;
         alert(err.data.message);
       }
 
@@ -4182,9 +4182,9 @@ axios.defaults.headers.common['API_TOKEN'] = "thomas";
       editBtn = $('#port_edit_btn').hide();
   refreshCallbacks();
   addBtn.click(function () {
-    axios.post("/portconnections?name=".concat(switchidField.val()), {}).then(function (response) {
+    axios.post("/portconnections?switch_id=".concat(switchidField.val(), "&room_id=").concat(roomidField.val(), "&port=").concat(portnrField.val()), {}).then(function (response) {
       list.add({
-        id: response.data.id_switches,
+        id: response.data.id_port_connection,
         switchid: response.data.switch_id,
         roomid: response.data.room_id,
         portnr: response.data.port
@@ -4207,7 +4207,7 @@ axios.defaults.headers.common['API_TOKEN'] = "thomas";
     var switchid = switchidField.val();
     var roomid = roomidField.val();
     var portnr = portnrField.val();
-    axios.put("/portconnections/?id=".concat(id, "&switchid=").concat(switchid, "&roomid=").concat(roomid, "&portnr=").concat(portnr), {}).then(function () {
+    axios.put("/portconnections?id=".concat(id, "&switch_id=").concat(switchid, "&room_id=").concat(roomid, "&port=").concat(portnr), {}).then(function () {
       item.values({
         id: id,
         switchid: switchid,
@@ -4221,8 +4221,7 @@ axios.defaults.headers.common['API_TOKEN'] = "thomas";
       }
 
       console.log(error);
-    });
-    then(function () {
+    }).then(function () {
       clearFields();
       editBtn.hide();
       addBtn.show();
@@ -4265,7 +4264,7 @@ axios.defaults.headers.common['API_TOKEN'] = "thomas";
 })();
 
 (function () {
-  var list = new List('list_table', {
+  new List('list_table', {
     valueNames: ['id', 'name', 'macadress']
   });
 })();
@@ -4279,7 +4278,7 @@ axios.defaults.headers.common['API_TOKEN'] = "thomas";
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\Schule\5AHWII\SWP\Net-Search\net-search\nese-website\resources\js\home.js */"./resources/js/home.js");
+module.exports = __webpack_require__(/*! C:\Eigene Dateien\HTL\5. Jahr\SWP-Projekt\net-search\nese-website\resources\js\home.js */"./resources/js/home.js");
 
 
 /***/ })

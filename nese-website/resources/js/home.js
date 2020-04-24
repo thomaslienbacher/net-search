@@ -213,26 +213,25 @@ axios.defaults.headers.common['API_TOKEN'] = process.env.MIX_API_TOKEN;
     refreshCallbacks();
 
     addBtn.click(function () {
-        axios.post(`switches?name=${nameField.val()}`, {})
-            .then(function(response) {
+        axios.post(`/switches?name=${nameField.val()}&ip=${ipaddressField.val()}&community_string=${communitystringField.val()}`, {})
+            .then(function (response) {
                 list.add({
-                    id: response.data.id_devices,
+                    id: response.data.id_switch,
                     name: response.data.name,
-                    ipaddress: response.data.ipaddress,
-                    communitystring: response.data.communitystring
+                    ipaddress: response.data.ip,
+                    communitystring: response.data.community_string
                 });
             }).catch(function (error) {
-        if (error.response) {
-            let err = error.response;
-            alert(err.data.message);
-        }
-
+            if (error.response) {
+                let err = error.response;
+                alert(err.data.message);
+            }
             console.log(error);
-            }).then(function () {
-                clearFields();
-                refreshCallbacks();
-            });
+        }).then(function () {
+            clearFields();
+            refreshCallbacks();
         });
+    });
 
     editBtn.click(function () {
         let item = list.get('id', idField.val())[0];
@@ -241,8 +240,8 @@ axios.defaults.headers.common['API_TOKEN'] = process.env.MIX_API_TOKEN;
         let ipaddress = ipaddressField.val();
         let communitystring = communitystringField.val();
 
-        axios.put(`/devices/?id=${id}&name=${name}&ipaddress=${ipaddress}&communitystring=${communitystring}`, {})
-            .then(function() {
+        axios.put(`/switches?id=${id}&name=${name}&ip=${ipaddress}&community_string=${communitystring}`, {})
+            .then(function () {
                 item.values({
                     id: id,
                     name: name,
@@ -250,11 +249,11 @@ axios.defaults.headers.common['API_TOKEN'] = process.env.MIX_API_TOKEN;
                     communitystring: communitystring,
                 });
             }).catch(function (error) {
-                if(error.respone){
-                    let err = error.respone;
-                    alert(err.data.message);
-                }
-                console.log(error);
+            if (error.response) {
+                let err = error.response;
+                alert(err.data.message);
+            }
+            console.log(error);
         }).then(function () {
             clearFields();
             editBtn.hide();
@@ -270,14 +269,14 @@ axios.defaults.headers.common['API_TOKEN'] = process.env.MIX_API_TOKEN;
             let itemId = $(this).closest('tr').find('.id').text();
 
             axios.delete(`/switches/${itemId}`)
-                .then(function(){
+                .then(function () {
                     list.remove(`id`, itemId);
                 }).catch(function (error) {
-                    if(error.response) {
-                        let err = error.response;
-                        alert(err.data.message);
-                    }
-                    console.log(error);
+                if (error.response) {
+                    let err = error.response;
+                    alert(err.data.message);
+                }
+                console.log(error);
             });
         });
 
@@ -317,10 +316,10 @@ axios.defaults.headers.common['API_TOKEN'] = process.env.MIX_API_TOKEN;
     refreshCallbacks();
 
     addBtn.click(function () {
-        axios.post(`/portconnections?name=${switchidField.val()}`, {})
+        axios.post(`/portconnections?switch_id=${switchidField.val()}&room_id=${roomidField.val()}&port=${portnrField.val()}`, {})
             .then(function (response) {
                 list.add({
-                    id: response.data.id_switches,
+                    id: response.data.id_port_connection,
                     switchid: response.data.switch_id,
                     roomid: response.data.room_id,
                     portnr: response.data.port
@@ -330,7 +329,6 @@ axios.defaults.headers.common['API_TOKEN'] = process.env.MIX_API_TOKEN;
                 let err = error.response;
                 alert(err.data.message);
             }
-
             console.log(error);
         }).then(function () {
             clearFields();
@@ -345,22 +343,21 @@ axios.defaults.headers.common['API_TOKEN'] = process.env.MIX_API_TOKEN;
         let roomid = roomidField.val();
         let portnr = portnrField.val();
 
-        axios.put(`/portconnections/?id=${id}&switchid=${switchid}&roomid=${roomid}&portnr=${portnr}`, {})
-            .then(function(){
+        axios.put(`/portconnections?id=${id}&switch_id=${switchid}&room_id=${roomid}&port=${portnr}`, {})
+            .then(function () {
                 item.values({
                     id: id,
                     switchid: switchid,
                     roomid: roomid,
                     portnr: portnr,
                 });
-            }).catch(function(error){
-                if(error.response){
-                    let err = error.response;
-                    alert(err.data.message);
-                }
-
-                console.log(error);
-        });then(function (){
+            }).catch(function (error) {
+            if (error.response) {
+                let err = error.response;
+                alert(err.data.message);
+            }
+            console.log(error);
+        }).then(function () {
             clearFields();
             editBtn.hide();
             addBtn.show();
@@ -375,14 +372,14 @@ axios.defaults.headers.common['API_TOKEN'] = process.env.MIX_API_TOKEN;
             let itemId = $(this).closest('tr').find('.id').text();
 
             axios.delete(`/portconnections/${itemId}`)
-                .then(function(){
+                .then(function () {
                     list.remove('id', itemId);
-                }).catch(function(error){
-                    if(error.response){
-                        let err = error.response;
-                        alert(err.data.message);
-                    }
-                    console.log(error);
+                }).catch(function (error) {
+                if (error.response) {
+                    let err = error.response;
+                    alert(err.data.message);
+                }
+                console.log(error);
             });
         });
 
@@ -407,7 +404,7 @@ axios.defaults.headers.common['API_TOKEN'] = process.env.MIX_API_TOKEN;
 })();
 
 (function () {
-    let list = new List('list_table', {
+    new List('list_table', {
         valueNames: ['id', 'name', 'macadress']
     });
 })();
